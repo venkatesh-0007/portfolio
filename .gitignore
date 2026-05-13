@@ -1,0 +1,15 @@
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE Files
+.vscode/
+.idea/
+
+# Local Environment
+.env
+.env.local
+
+# Build/Dist (if any)
+dist/
+build/

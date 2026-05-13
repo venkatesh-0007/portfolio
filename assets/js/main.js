@@ -201,7 +201,6 @@ function initNameHover() {
             clearTimeout(leaveTimeout);
             isVisible = true;
             popup.classList.add('visible');
-            overlay.classList.add('visible');
             document.body.classList.add('is-hovering-name');
         });
 
@@ -209,7 +208,6 @@ function initNameHover() {
             leaveTimeout = setTimeout(() => {
                 isVisible = false;
                 popup.classList.remove('visible');
-                overlay.classList.remove('visible');
                 document.body.classList.remove('is-hovering-name');
             }, 20);
         });

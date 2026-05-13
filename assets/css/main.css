@@ -11,9 +11,9 @@
     --heading: 'Syne', sans-serif;
     --serif: 'Syne', sans-serif;
 
-    --max-w: 1200px;
+    --max-w: 1600px;
     --px: clamp(20px, 4vw, 40px);
-    --section-py: clamp(100px, 12vw, 180px);
+    --section-py: clamp(60px, 10vw, 120px);
 }
 
 /* ── Reset ── */
@@ -26,8 +26,7 @@
 }
 
 html {
-    scroll-behavior: initial;
-    /* Lenis handles scroll */
+    scroll-behavior: smooth;
 }
 
 body {
@@ -375,12 +374,14 @@ button {
 /*  HERO                                       */
 /* ═══════════════════════════════════════════ */
 .hero {
-    min-height: 100vh;
+    min-height: 80vh;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding: 140px 0 80px;
+    padding: 100px 0 60px;
 }
 
 .hero-status {
@@ -777,15 +778,15 @@ body.is-hovering-name .hero-name {
 
 .skills-layout {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
+    grid-template-columns: 1fr 2.5fr;
     gap: clamp(40px, 6vw, 100px);
     align-items: start;
 }
 
 .skills-cols {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
 }
 
 .skill-group-title {
@@ -823,30 +824,22 @@ body.is-hovering-name .hero-name {
     border-bottom: 1px solid var(--border);
 }
 
-.achievements-layout {
-    display: grid;
-    grid-template-columns: 0.7fr 2.3fr;
-    gap: clamp(40px, 6vw, 100px);
-    align-items: start;
-}
-
-.achievements-content {
-    display: flex;
-    flex-direction: column;
+.achievements-header {
+    margin-bottom: 48px;
 }
 
 /* Achievement Cards */
 .achievement-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
 }
 
 .achievement-list li {
     display: flex;
     gap: 16px;
     align-items: flex-start;
-    padding: 24px;
+    padding: 28px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -856,6 +849,31 @@ body.is-hovering-name .hero-name {
 .achievement-list li:hover {
     border-color: var(--accent);
     background: rgba(255, 255, 255, 0.04);
+    transform: translateY(-4px);
+}
+
+/* Certification List */
+.cert-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.cert-list li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.cert-list li:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--accent);
     transform: translateY(-4px);
 }
 
@@ -877,33 +895,6 @@ body.is-hovering-name .hero-name {
     font-size: 14px;
     color: var(--fg-muted);
     line-height: 1.6;
-}
-
-/* Certification List */
-.cert-list {
-    display: flex;
-    flex-direction: column;
-}
-
-.cert-list li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 0;
-    border-bottom: 1px solid var(--border);
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.cert-list li:first-child {
-    border-top: 1px solid var(--border);
-}
-
-.cert-list li:hover {
-    padding-left: 15px;
-    padding-right: 15px;
-    background: rgba(255, 255, 255, 0.03);
-    border-color: var(--accent);
 }
 
 .cert-list li::after {
@@ -938,7 +929,6 @@ body.is-hovering-name .hero-name {
     font-size: 15px;
     font-weight: 500;
     flex-grow: 1;
-    margin: 0 24px;
 }
 
 .cert-name em {
@@ -1188,6 +1178,8 @@ body.is-hovering-name .hero-name {
 /* ═══════════════════════════════════════════ */
 /*  RESPONSIVE                                 */
 /* ═══════════════════════════════════════════ */
+
+/* ── Tablet (max-width: 900px) ── */
 @media (max-width: 900px) {
 
     .about-grid,
@@ -1211,6 +1203,14 @@ body.is-hovering-name .hero-name {
     }
 
     .skills-cols {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .achievement-list {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cert-list {
         grid-template-columns: 1fr;
     }
 
@@ -1227,24 +1227,285 @@ body.is-hovering-name .hero-name {
         flex-direction: column;
         gap: 24px;
     }
+
+    .footer-content {
+        margin-bottom: 40px;
+    }
 }
 
-@media (max-width: 480px) {
+/* ── Mobile (max-width: 768px) ── */
+@media (max-width: 768px) {
+
+    /* Hero */
+    .hero {
+        min-height: auto;
+        padding: 100px 0 48px;
+    }
+
     .hero-name {
-        font-size: 38px;
+        font-size: clamp(28px, 8vw, 48px);
+        margin-bottom: 32px;
+    }
+
+    .hero-status {
+        margin-bottom: 24px;
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+        max-width: 100%;
     }
 
     .hero-actions {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .hero-actions .btn,
+    .hero-actions .btn-premium {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .hero-glow {
+        width: 80vw;
+        height: 80vw;
+    }
+
+    /* About */
+    .about-lead {
+        font-size: clamp(18px, 5vw, 24px);
+    }
+
+    .about-body {
+        font-size: 15px;
+    }
+
+    .stats {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    /* Projects */
+    .featured-card {
+        gap: 32px;
+    }
+
+    .project-info {
+        padding: 0;
+    }
+
+    .project-slider {
+        border-radius: 12px;
+    }
+
+    .slider-nav {
+        bottom: 16px;
+        right: 16px;
+    }
+
+    .slider-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .slider-dots {
+        bottom: 16px;
+        left: 16px;
+    }
+
+    /* Skills */
+    .skills-cols {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .skill-group li {
+        font-size: 16px;
+        padding: 6px 0;
+    }
+
+    /* Achievements & Certificates */
+    .achievements-header {
+        margin-bottom: 32px;
+    }
+
+    .achievement-list {
+        grid-template-columns: 1fr;
         gap: 16px;
+    }
+
+    .achievement-list li {
+        padding: 20px;
+    }
+
+    .cert-list {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .cert-list li {
+        padding: 16px 20px;
+    }
+
+    .cert-issuer {
+        font-size: 9px;
+        padding: 5px 10px;
+    }
+
+    .cert-name {
+        font-size: 14px;
+    }
+
+    /* Contact */
+    .contact-layout {
+        gap: 40px;
+    }
+
+    .contact-heading {
+        font-size: clamp(24px, 7vw, 36px);
+        margin-bottom: 16px;
+    }
+
+    .contact-sub {
+        font-size: 15px;
+        max-width: 100%;
+        margin-bottom: 24px;
+    }
+
+    .contact-details {
+        margin-top: 24px;
+        gap: 16px;
+    }
+
+    .contact-item {
+        padding: 14px;
+        gap: 14px;
+    }
+
+    .contact-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        font-size: 16px;
+        border-radius: 10px;
+    }
+
+    .detail-label {
+        font-size: 9px;
+    }
+
+    .detail-value {
+        font-size: 13px;
+        word-break: break-all;
+    }
+
+    /* Form */
+    .form {
+        gap: 18px;
+    }
+
+    .field input,
+    .field textarea {
+        padding: 14px;
+        font-size: 16px; /* prevents iOS zoom on focus */
+        border-radius: 8px;
+    }
+
+    .field label {
+        font-size: 10px;
+        margin-bottom: 6px;
+    }
+
+    .btn--full {
+        padding: 16px;
+        font-size: 14px;
+    }
+
+    /* Footer */
+    .footer {
+        padding: 48px 0 32px;
+    }
+
+    .footer-tagline {
+        font-size: clamp(28px, 8vw, 48px);
+    }
+
+    .footer-content {
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .arrow-up {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+    }
+
+    /* Modal */
+    .modal-container {
+        width: 95%;
+        height: 85%;
+        border-radius: 12px;
+    }
+
+    /* Hide popup on touch devices */
+    .info-popup,
+    .blur-overlay {
+        display: none !important;
+    }
+
+    .name-hover {
+        cursor: default;
+    }
+
+    /* Section sizing */
+    .section-heading {
+        font-size: clamp(24px, 6vw, 40px);
+    }
+}
+
+/* ── Small Mobile (max-width: 480px) ── */
+@media (max-width: 480px) {
+
+    .hero-name {
+        font-size: 28px;
+    }
+
+    .hero-actions {
+        gap: 10px;
+    }
+
+    .btn-premium {
+        padding: 14px 20px;
+        font-size: 13px;
     }
 
     .social-icon {
         width: 40px;
         height: 40px;
     }
+
+    .stat-number {
+        font-size: 32px;
+    }
+
+    .section-heading {
+        font-size: 24px;
+    }
+
+    .project-slider {
+        aspect-ratio: 4/3;
+    }
+
+    .cert-list li::after {
+        display: none;
+    }
 }
+
 /* ═══════════════════════════════════════════ */
 /*  INFO POPUP (Hover)                         */
 /* ═══════════════════════════════════════════ */

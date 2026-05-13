@@ -1,9 +1,9 @@
 // ── Global Lenis instance ──
-let lenis;
+// let lenis;
 
 // ── Wait for DOM ──
 document.addEventListener('DOMContentLoaded', () => {
-    initLenis();
+    // initLenis();
     initSmoothAnchors();
     initCursor();
     initNameHover();
@@ -176,9 +176,25 @@ function initNameHover() {
     let isVisible = false;
     let leaveTimeout;
 
-    // Use GSAP for buttery smooth follow
-    const xTo = gsap.quickTo(popup, "left", { duration: 0.45, ease: "power3.out" });
-    const yTo = gsap.quickTo(popup, "top", { duration: 0.45, ease: "power3.out" });
+    const movePopup = (e) => {
+        if (!isVisible) return;
+        
+        const x = e.clientX + 25;
+        const y = e.clientY + 25;
+        
+        const rect = popup.getBoundingClientRect();
+        let finalX = x;
+        let finalY = y;
+        
+        if (x + rect.width > window.innerWidth - 20) {
+            finalX = e.clientX - rect.width - 25;
+        }
+        if (y + rect.height > window.innerHeight - 20) {
+            finalY = e.clientY - rect.height - 25;
+        }
+
+        gsap.set(popup, { left: finalX, top: finalY });
+    };
 
     targets.forEach(target => {
         target.addEventListener('mouseenter', () => {
@@ -195,34 +211,10 @@ function initNameHover() {
                 popup.classList.remove('visible');
                 overlay.classList.remove('visible');
                 document.body.classList.remove('is-hovering-name');
-            }, 20); // Small delay to prevent glitching/flicker
+            }, 20);
         });
 
-        target.addEventListener('mousemove', (e) => {
-            if (!isVisible) return;
-            
-            // Southeast Position: offset by 30px
-            const x = e.clientX + 30;
-            const y = e.clientY + 30;
-            
-            // Clamp to window bounds
-            const rect = popup.getBoundingClientRect();
-            let finalX = x;
-            let finalY = y;
-            
-            // If it would overflow right
-            if (x + rect.width > window.innerWidth - 20) {
-                finalX = e.clientX - rect.width - 30;
-            }
-            
-            // If it would overflow bottom
-            if (y + rect.height > window.innerHeight - 20) {
-                finalY = e.clientY - rect.height - 30;
-            }
-
-            xTo(finalX);
-            yTo(finalY);
-        });
+        target.addEventListener('mousemove', movePopup);
     });
 }
 
@@ -232,9 +224,10 @@ function initNameHover() {
 // ═══════════════════════════════════════════
 function initLenis() {
     lenis = new Lenis({
-        duration: 1.2,
+        duration: 0.8,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
+        wheelMultiplier: 0.8,
     });
 
     lenis.on('scroll', ScrollTrigger.update);
@@ -254,20 +247,15 @@ function initSmoothAnchors() {
         anchor.addEventListener('click', (e) => {
             const href = anchor.getAttribute('href');
             if (!href || href === '#') {
-                // Scroll to top for bare "#" links
                 e.preventDefault();
-                lenis.scrollTo(0, { duration: 1.6 });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
             }
 
             const target = document.querySelector(href);
             if (target) {
                 e.preventDefault();
-                lenis.scrollTo(target, {
-                    offset: 0,
-                    duration: 1.6,
-                    easing: (t) => 1 - Math.pow(1 - t, 4), // easeOutQuart
-                });
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });

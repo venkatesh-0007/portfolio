@@ -757,8 +757,40 @@ body.is-hovering-name .hero-name {
 }
 
 .about-grid {
-    display: block;
-    max-width: 900px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: var(--max-w);
+}
+
+.about-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dots-lottie {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+}
+
+@media (max-width: 1024px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .about-visual {
+        order: -1;
+        margin-bottom: 10px;
+    }
+
+    .dots-lottie {
+        max-width: 280px;
+    }
 }
 
 .about-lead {

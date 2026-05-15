@@ -264,6 +264,7 @@ function initSmoothAnchors() {
 // ═══════════════════════════════════════════
 function initCursor() {
     const cursor = document.getElementById('custom-cursor');
+    const flashlight = document.getElementById('flashlight');
     if (!cursor) return;
 
     // Show cursor only after first mouse move
@@ -271,6 +272,23 @@ function initCursor() {
         cursor.classList.add('visible');
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
+
+        if (flashlight) {
+            flashlight.style.left = e.clientX + 'px';
+            flashlight.style.top = e.clientY + 'px';
+        }
+
+        // Grid highlight tracking for sections with grid
+        const gridSections = document.querySelectorAll('.hero, .contact, .footer');
+        gridSections.forEach(sec => {
+            const rect = sec.getBoundingClientRect();
+            if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                sec.style.setProperty('--mouse-x', `${x}px`);
+                sec.style.setProperty('--mouse-y', `${y}px`);
+            }
+        });
     });
 
     // Hover states
@@ -278,6 +296,26 @@ function initCursor() {
     hoverTargets.forEach(el => {
         el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
         el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    });
+
+    // Theme detection for flashlight
+    const allSections = document.querySelectorAll('section');
+    allSections.forEach(section => {
+        ScrollTrigger.create({
+            trigger: section,
+            start: "top 50%",
+            end: "bottom 50%",
+            onEnter: () => {
+                if (flashlight) {
+                    flashlight.style.opacity = section.classList.contains('theme--light') ? '0' : '1';
+                }
+            },
+            onEnterBack: () => {
+                if (flashlight) {
+                    flashlight.style.opacity = section.classList.contains('theme--light') ? '0' : '1';
+                }
+            }
+        });
     });
 }
 
@@ -292,6 +330,25 @@ function initNavbar() {
     // Scroll effect
     window.addEventListener('scroll', () => {
         nav.classList.toggle('scrolled', window.scrollY > 80);
+    });
+
+    // Theme awareness for sticky navbar
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+        ScrollTrigger.create({
+            trigger: section,
+            start: "top 60px",
+            end: "bottom 60px",
+            onToggle: self => {
+                if (self.isActive) {
+                    if (section.classList.contains('theme--light')) {
+                        nav.classList.add('navbar--light');
+                    } else {
+                        nav.classList.remove('navbar--light');
+                    }
+                }
+            }
+        });
     });
 
     // Mobile menu
@@ -328,42 +385,108 @@ function initScrollProgress() {
 function initAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 
-    // ── Hero Title Reveal ──
-    // Set initial state
-    gsap.set('.hero-name .word', { y: '100%', opacity: 0 });
-    gsap.set('.reveal', { opacity: 0, y: 24 });
+    // ── Hero: Cinematic Entrance ──
+    // Clear .reveal initial states on hero children (GSAP handles them)
+    gsap.set('.hero .reveal', { opacity: 1, y: 0 });
+    // Now set our custom initial states
+    gsap.set('.hero-name .word', { y: '120%', opacity: 0, scale: 0.95 });
+    gsap.set('.hero-status', { opacity: 0, y: -20 });
+    gsap.set('.hero-meta > *', { opacity: 0, y: 30 });
+    gsap.set('.hero-actions', { opacity: 1, y: 0 });
+    gsap.set('.hero-actions .btn-premium', { opacity: 0, y: 20, scale: 0.95 });
+    gsap.set('.scroll-hint', { opacity: 0 });
 
-    const heroTl = gsap.timeline({ delay: 0.3 });
+    const heroTl = gsap.timeline({ delay: 0.5 });
 
     heroTl
+        // Status bar fades in first
+        .to('.hero-status', {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: 'power2.out',
+        })
+        // Name words reveal with stagger
         .to('.hero-name .word', {
             y: '0%',
             opacity: 1,
-            stagger: 0.12,
-            duration: 1.2,
+            scale: 1,
+            stagger: 0.15,
+            duration: 1.4,
             ease: 'expo.out',
-        })
-        .to('.hero .reveal', {
+        }, '-=0.3')
+        // Meta info slides up
+        .to('.hero-meta > *', {
             opacity: 1,
             y: 0,
-            stagger: 0.08,
+            stagger: 0.1,
             duration: 0.8,
             ease: 'power3.out',
-        }, '-=0.6');
+        }, '-=0.7')
+        // Buttons pop in with scale
+        .to('.hero-actions .btn-premium', {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            stagger: 0.08,
+            duration: 0.6,
+            ease: 'back.out(1.7)',
+        }, '-=0.5')
+        // Scroll hint fades in last
+        .to('.scroll-hint', {
+            opacity: 1,
+            duration: 1,
+            ease: 'power2.out',
+        }, '-=0.3');
 
-    // ── Scroll-triggered Reveals ──
+    // ── Scroll-triggered Section Reveals ──
     const revealEls = document.querySelectorAll('section:not(.hero) .reveal, footer .reveal');
-    revealEls.forEach(el => {
+    revealEls.forEach((el, i) => {
         gsap.to(el, {
             scrollTrigger: {
                 trigger: el,
-                start: 'top 88%',
+                start: 'top 90%',
                 toggleActions: 'play none none none',
             },
             opacity: 1,
             y: 0,
-            duration: 1,
+            duration: 0.9,
             ease: 'power3.out',
+            delay: (i % 3) * 0.05, // subtle stagger within viewport
+        });
+    });
+
+    // ── Skill Groups: Staggered Reveal ──
+    const skillGroups = document.querySelectorAll('.skill-group');
+    if (skillGroups.length) {
+        gsap.set(skillGroups, { opacity: 0, y: 20 });
+        ScrollTrigger.create({
+            trigger: '.skills-cols',
+            start: 'top 85%',
+            onEnter: () => {
+                gsap.to(skillGroups, {
+                    opacity: 1,
+                    y: 0,
+                    stagger: 0.1,
+                    duration: 0.7,
+                    ease: 'power3.out',
+                });
+            },
+            once: true,
+        });
+    }
+
+    // ── Section Heading Parallax ──
+    document.querySelectorAll('.section-heading').forEach(heading => {
+        gsap.to(heading, {
+            scrollTrigger: {
+                trigger: heading,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 0.5,
+            },
+            y: -20,
+            ease: 'none',
         });
     });
 
@@ -382,24 +505,24 @@ function initAnimations() {
         });
     }
 
-    // ── Project Visual Tilt on Hover ──
-    const visual = document.querySelector('.project-visual');
-    if (visual) {
-        const card = visual.closest('.featured-card');
+    // ── Featured Project: Subtle Tilt on Hover ──
+    const slider = document.querySelector('.project-slider');
+    if (slider) {
+        const card = slider.closest('.featured-card');
         if (card) {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const xPct = (e.clientX - rect.left) / rect.width - 0.5;
                 const yPct = (e.clientY - rect.top) / rect.height - 0.5;
-                gsap.to(visual, {
-                    rotateY: xPct * 8,
-                    rotateX: -yPct * 8,
+                gsap.to(slider, {
+                    rotateY: xPct * 6,
+                    rotateX: -yPct * 6,
                     duration: 0.4,
                     ease: 'power2.out',
                 });
             });
             card.addEventListener('mouseleave', () => {
-                gsap.to(visual, {
+                gsap.to(slider, {
                     rotateY: 0,
                     rotateX: 0,
                     duration: 0.6,
@@ -407,5 +530,45 @@ function initAnimations() {
                 });
             });
         }
+    }
+
+    // ── Achievement Cards: Staggered Entrance ──
+    const achievementItems = document.querySelectorAll('.achievement-list li');
+    if (achievementItems.length) {
+        gsap.set(achievementItems, { opacity: 0, y: 16 });
+        ScrollTrigger.create({
+            trigger: '.achievement-list',
+            start: 'top 85%',
+            onEnter: () => {
+                gsap.to(achievementItems, {
+                    opacity: 1,
+                    y: 0,
+                    stagger: 0.08,
+                    duration: 0.6,
+                    ease: 'power3.out',
+                });
+            },
+            once: true,
+        });
+    }
+
+    // ── Certificate Cards: Staggered Entrance ──
+    const certItems = document.querySelectorAll('.cert-list li');
+    if (certItems.length) {
+        gsap.set(certItems, { opacity: 0, x: -12 });
+        ScrollTrigger.create({
+            trigger: '.cert-list',
+            start: 'top 85%',
+            onEnter: () => {
+                gsap.to(certItems, {
+                    opacity: 1,
+                    x: 0,
+                    stagger: 0.06,
+                    duration: 0.5,
+                    ease: 'power2.out',
+                });
+            },
+            once: true,
+        });
     }
 }

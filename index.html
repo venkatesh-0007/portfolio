@@ -17,6 +17,7 @@
 <body>
 
     <div id="custom-cursor"></div>
+    <div id="flashlight"></div>
     <div class="scroll-progress"></div>
 
     <!-- ═══ NAVBAR ═══ -->
@@ -42,7 +43,8 @@
     <main>
 
         <!-- ═══ HERO ═══ -->
-        <section class="hero" id="home">
+        <section class="hero theme--dark" id="home">
+            <div class="grid-highlight"></div>
             <div class="container">
                 <div class="hero-status reveal">
                     <span class="status-dot"></span>
@@ -58,10 +60,10 @@
 
                 <div class="hero-meta">
                     <div class="hero-role reveal">
-                        Data Science Student &<br>Full-Stack Developer
+                        Data Science Student &<br>AI / ML Engineer
                     </div>
                     <p class="hero-desc reveal">
-                        Building intelligent systems, modern web experiences, and practical automation solutions from
+                        Building intelligent systems, advanced data models, and practical automation solutions from
                         Rajahmundry, India.
                     </p>
                 </div>
@@ -69,21 +71,26 @@
                 <div class="hero-actions reveal">
                     <a href="#projects" class="btn-premium">
                         <span>View Projects</span>
-                        <div class="btn-glow"></div>
                     </a>
-                    <a href="https://github.com/necromancer-007" target="_blank" class="btn-premium">
-                        <span>GitHub</span>
-                        <div class="btn-glow"></div>
-                    </a>
-                    <a href="https://www.linkedin.com/in/amudalapalli-venkateswara-rao-968b5a26a" target="_blank"
-                        class="btn-premium">
-                        <span>LinkedIn</span>
-                        <div class="btn-glow"></div>
-                    </a>
-                    <a href="https://www.codechef.com/users/one_cut" target="_blank" class="btn-premium">
-                        <span>CodeChef</span>
-                        <div class="btn-glow"></div>
-                    </a>
+                    <div class="social-wrapper">
+                        <a href="https://github.com/necromancer-007" target="_blank" class="btn-premium" data-username="venkatesh-0007">
+                            <span>GitHub</span>
+                        </a>
+                        <span class="btn-tooltip">venkatesh-0007</span>
+                    </div>
+                    <div class="social-wrapper">
+                        <a href="https://www.linkedin.com/in/amudalapalli-venkateswara-rao-968b5a26a" target="_blank"
+                            class="btn-premium" data-username="Venkateswara Rao Amudalapalli">
+                            <span>LinkedIn</span>
+                        </a>
+                        <span class="btn-tooltip">Venkateswara Rao Amudalapalli</span>
+                    </div>
+                    <div class="social-wrapper">
+                        <a href="https://www.codechef.com/users/one_cut" target="_blank" class="btn-premium" data-username="one_cut">
+                            <span>CodeChef</span>
+                        </a>
+                        <span class="btn-tooltip">one_cut</span>
+                    </div>
                 </div>
             </div>
             <div class="scroll-hint">
@@ -92,33 +99,26 @@
             </div>
 
             <div class="hero-glow"></div>
+            <div class="hero-film-grain"></div>
         </section>
 
         <!-- ═══ ABOUT ═══ -->
-        <section class="about" id="about">
+        <section class="about theme--light" id="about">
             <div class="container">
                 <span class="section-label reveal">About</span>
                 <div class="about-grid">
                     <div class="about-text">
                         <p class="about-lead reveal">
-                            I am a Data Science student at <strong>Vignan's Institute of Information Technology</strong>
-                            with a CGPA of 9.2.
+                            I am a Data Science student at <strong>Vignan's Institute of Information Technology</strong>.
                         </p>
                         <p class="about-body reveal">
-                            My work sits at the intersection of rigorous data analysis and modern full-stack
+                            My work sits at the intersection of rigorous data analysis and modern machine learning
                             development. I focus on creating systems that are not only intelligent but also visually
                             premium and highly functional.
                         </p>
-                    </div>
-                    <div class="stats">
-                        <div class="stat reveal">
-                            <div class="stat-value">9.2</div>
-                            <div class="stat-label">CGPA</div>
-                        </div>
-                        <div class="reveal" style="margin-top: 24px;">
+                        <div class="reveal" style="margin-top: 48px;">
                             <a href="javascript:void(0)" class="btn-premium" id="openResume">
                                 <span>View Resume</span>
-                                <div class="btn-glow"></div>
                             </a>
                         </div>
                     </div>
@@ -127,14 +127,27 @@
         </section>
 
         <!-- ═══ PROJECTS ═══ -->
-        <section class="projects" id="projects">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <div class="marquee-item">Data Science</div>
+                <div class="marquee-item">Machine Learning</div>
+                <div class="marquee-item">Python Developer</div>
+                <div class="marquee-item">Artificial Intelligence</div>
+                <div class="marquee-item">Data Science</div>
+                <div class="marquee-item">Machine Learning</div>
+                <div class="marquee-item">Python Developer</div>
+                <div class="marquee-item">Artificial Intelligence</div>
+            </div>
+        </div>
+
+        <section class="projects theme--dark" id="projects">
             <div class="container">
                 <div class="projects-header">
                     <span class="section-label reveal">Work</span>
-                    <h2 class="section-heading reveal">Selected Projects</h2>
+                    <h2 class="section-heading reveal">Projects</h2>
                 </div>
 
-                <!-- Featured Project -->
+                <!-- Featured Project — Case Study -->
                 <div class="featured-card reveal">
                     <div class="project-slider" data-slider="parking">
                         <div class="slider-wrapper">
@@ -153,21 +166,32 @@
                         <div class="slider-progress-container">
                             <div class="slider-progress-bar"></div>
                         </div>
-                        <span class="tag">Computer Vision</span>
+                        <span class="tag">Featured Project</span>
                     </div>
-                    <div>
-                        <span class="project-num">01</span>
-                        <h3 class="project-title">Smart Parking System</h3>
-                        <p class="project-desc">An AI-powered system using computer vision techniques to monitor and
-                            detect parking slot availability in real-time.</p>
-                        <div class="tags">
-                            <span>Slot Detection</span>
-                            <span>Image Processing</span>
-                            <span>Automation</span>
+                    <div class="project-info">
+                        <span class="project-num">01 — Case Study</span>
+                        <h3 class="project-title">Smart Parking<br>System</h3>
+                        <p class="project-desc project-problem">Parking lots lack real-time monitoring, forcing drivers
+                            to search blindly for open slots — wasting time and fuel.</p>
+                        <p class="project-desc project-solution">Built an AI-powered system using computer vision to
+                            detect and display parking slot availability in real-time through a modern web dashboard.</p>
+                        <div class="project-features">
+                            <span>Real-time Detection</span>
+                            <span>License Plate OCR</span>
+                            <span>Auto-logging</span>
+                            <span>Dark / Light Mode</span>
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-label">Stack</span>
+                            <div class="tech-pills">
+                                <span>Python</span>
+                                <span>OpenCV</span>
+                                <span>FastAPI</span>
+                                <span>JavaScript</span>
+                            </div>
                         </div>
                         <div class="project-actions">
-                            <a href="#" class="text-link">View Case Study</a>
-                            <a href="https://github.com/necromancer-007" target="_blank" class="text-link">GitHub</a>
+                            <a href="https://github.com/venkatesh-0007/Smart_Park" target="_blank" class="text-link">View on GitHub →</a>
                         </div>
                     </div>
                 </div>
@@ -199,7 +223,7 @@
         </section>
 
         <!-- ═══ SKILLS ═══ -->
-        <section class="skills" id="skills">
+        <section class="skills theme--dark" id="skills">
             <div class="container">
                 <div class="skills-layout">
                     <div>
@@ -257,7 +281,8 @@
         </section>
 
         <!-- ═══ ACHIEVEMENTS & CERTIFICATIONS ═══ -->
-        <section class="achievements" id="achievements">
+
+        <section class="achievements theme--light" id="achievements">
             <div class="container">
                 <div class="achievements-header reveal">
                     <span class="section-label">Recognition</span>
@@ -297,27 +322,27 @@
                     <h4 class="skill-group-title">Certifications</h4>
                     <ul class="cert-list">
                         <li data-doc="assets/docs/certificates/nptel_python.pdf">
-                            <span class="cert-issuer">NPTEL</span>
+                            <span class="cert-issuer">📜</span>
                             <span class="cert-name">Python for Data Science <em>(Top 5%)</em></span>
                         </li>
                         <li data-doc="assets/docs/certificates/tata_ai.pdf">
-                            <span class="cert-issuer">Tata</span>
+                            <span class="cert-issuer">🏢</span>
                             <span class="cert-name">AI Powered Data Analytics Job Simulation</span>
                         </li>
                         <li data-doc="assets/docs/certificates/ibm_ai.pdf">
-                            <span class="cert-issuer">IBM</span>
+                            <span class="cert-issuer">💻</span>
                             <span class="cert-name">Artificial Intelligence Fundamentals</span>
                         </li>
                         <li data-doc="assets/docs/certificates/kaggle_viz.pdf">
-                            <span class="cert-issuer">Kaggle</span>
+                            <span class="cert-issuer">📊</span>
                             <span class="cert-name">Data Visualization</span>
                         </li>
                         <li data-doc="assets/docs/certificates/Simplilearn_pbi.pdf">
-                            <span class="cert-issuer">Simplilearn</span>
+                            <span class="cert-issuer">🎓</span>
                             <span class="cert-name">Power BI for Beginners</span>
                         </li>
                         <li data-doc="assets/docs/certificates/Future Interns.pdf">
-                            <span class="cert-issuer">Future Interns</span>
+                            <span class="cert-issuer">💼</span>
                             <span class="cert-name">Machine Learning Internship</span>
                         </li>
                     </ul>
@@ -326,7 +351,8 @@
         </section>
 
         <!-- ═══ CONTACT ═══ -->
-        <section class="contact" id="contact">
+        <section class="contact theme--dark" id="contact">
+            <div class="grid-highlight"></div>
             <div class="container">
                 <span class="section-label reveal">Connect</span>
                 <div class="contact-layout">
@@ -334,8 +360,8 @@
                         <h2 class="contact-heading reveal">
                             Let's start a<br><span class="italic">conversation.</span>
                         </h2>
-                        <p class="contact-sub reveal">I'm always looking to connect with like-minded developers,
-                            students, or anyone passionate about data and design. Feel free to reach out!</p>
+                        <p class="contact-sub reveal">I'm always looking to connect with like-minded data scientists,
+                            students, or anyone passionate about AI and design. Feel free to reach out!</p>
 
                         <div class="contact-details reveal">
                             <div class="contact-item">
@@ -379,7 +405,6 @@
                             </div>
                             <button type="submit" class="btn btn-premium btn--full">
                                 <span>Send Message</span>
-                                <div class="btn-glow"></div>
                             </button>
                         </form>
                     </div>
@@ -389,12 +414,11 @@
     </main>
 
     <footer class="footer">
+        <div class="grid-highlight"></div>
         <div class="container">
             <div class="footer-content reveal">
-                <h2 class="footer-tagline">Remember my name?</h2>
-                <a href="#home" class="back-to-top">
-                    <div class="arrow-up">&uarr;</div>
-                    <span>Back to top</span>
+                <a href="#home" class="footer-tagline-link">
+                    <h2 class="footer-tagline">Remember my name?</h2>
                 </a>
             </div>
             <div class="footer-bottom reveal">
@@ -416,7 +440,7 @@
                 <p>Data Science @ Vignan's VIIT</p>
                 <div class="popup-tags">
                     <span>AI / ML</span>
-                    <span>Full-Stack</span>
+                    <span>Data Science</span>
                 </div>
             </div>
         </div>

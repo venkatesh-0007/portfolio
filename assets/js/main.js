@@ -21,10 +21,11 @@ function initProjectSliders() {
     const sliders = document.querySelectorAll('.project-slider');
     
     sliders.forEach(slider => {
+        const visual = slider.closest('.case-study-visual');
         const images = slider.querySelectorAll('.slider-img');
-        const prevBtn = slider.querySelector('.prev');
-        const nextBtn = slider.querySelector('.next');
-        const dotsContainer = slider.querySelector('.slider-dots');
+        const prevBtn = visual.querySelector('.prev');
+        const nextBtn = visual.querySelector('.next');
+        const dotsContainer = visual.querySelector('.slider-dots');
         const progressBar = slider.querySelector('.slider-progress-bar');
         
         let currentIndex = 0;
@@ -47,10 +48,18 @@ function initProjectSliders() {
             else img.onload = () => checkVertical(img);
         });
 
-        const dots = slider.querySelectorAll('.dot');
+        const dots = visual.querySelectorAll('.dot');
+
+        function updateAspectRatio() {
+            const activeImg = images[currentIndex];
+            if (activeImg.naturalWidth && activeImg.naturalHeight) {
+                slider.style.aspectRatio = `${activeImg.naturalWidth} / ${activeImg.naturalHeight}`;
+            }
+        }
 
         function checkVertical(img) {
             if (img.naturalHeight > img.naturalWidth) img.classList.add('vertical');
+            if (img === images[currentIndex]) updateAspectRatio();
         }
 
         function goToSlide(index) {
@@ -61,6 +70,7 @@ function initProjectSliders() {
             
             images[currentIndex].classList.add('active');
             dots[currentIndex].classList.add('active');
+            updateAspectRatio();
         }
 
         function startAutoPlay() {
@@ -389,48 +399,41 @@ function initAnimations() {
     // Clear .reveal initial states on hero children (GSAP handles them)
     gsap.set('.hero .reveal', { opacity: 1, y: 0 });
     // Now set our custom initial states
-    gsap.set('.hero-name .word', { y: '120%', opacity: 0, scale: 0.95 });
-    gsap.set('.hero-status', { opacity: 0, y: -20 });
-    gsap.set('.hero-meta > *', { opacity: 0, y: 30 });
+    gsap.set('.hero-name .word', { y: '130%', opacity: 0, scale: 0.9, rotationZ: 4 });
+    gsap.set('.hero-meta > *', { opacity: 0, y: 40 });
     gsap.set('.hero-actions', { opacity: 1, y: 0 });
-    gsap.set('.hero-actions .btn-premium', { opacity: 0, y: 20, scale: 0.95 });
+    gsap.set('.hero-actions .btn-premium', { opacity: 0, y: 30, scale: 0.9 });
     gsap.set('.scroll-hint', { opacity: 0 });
 
-    const heroTl = gsap.timeline({ delay: 0.5 });
+    const heroTl = gsap.timeline({ delay: 0.3 });
 
     heroTl
-        // Status bar fades in first
-        .to('.hero-status', {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power2.out',
-        })
         // Name words reveal with stagger
         .to('.hero-name .word', {
             y: '0%',
             opacity: 1,
             scale: 1,
-            stagger: 0.15,
-            duration: 1.4,
-            ease: 'expo.out',
-        }, '-=0.3')
+            rotationZ: 0,
+            stagger: 0.12,
+            duration: 1.6,
+            ease: 'power4.out',
+        }, '-=0.4')
         // Meta info slides up
         .to('.hero-meta > *', {
             opacity: 1,
             y: 0,
-            stagger: 0.1,
-            duration: 0.8,
+            stagger: 0.15,
+            duration: 1.2,
             ease: 'power3.out',
-        }, '-=0.7')
+        }, '-=1.0')
         // Buttons pop in with scale
         .to('.hero-actions .btn-premium', {
             opacity: 1,
             y: 0,
             scale: 1,
-            stagger: 0.08,
-            duration: 0.6,
-            ease: 'back.out(1.7)',
+            stagger: 0.1,
+            duration: 1,
+            ease: 'expo.out',
         }, '-=0.5')
         // Scroll hint fades in last
         .to('.scroll-hint', {
@@ -445,14 +448,36 @@ function initAnimations() {
         gsap.to(el, {
             scrollTrigger: {
                 trigger: el,
-                start: 'top 90%',
+                start: 'top 85%',
                 toggleActions: 'play none none none',
             },
             opacity: 1,
             y: 0,
-            duration: 0.9,
+            duration: 1,
             ease: 'power3.out',
-            delay: (i % 3) * 0.05, // subtle stagger within viewport
+            delay: (i % 3) * 0.1,
+        });
+    });
+
+    // ── Case Study Stagger ──
+    const caseStudies = document.querySelectorAll('.featured-case-study');
+    caseStudies.forEach(caseStudy => {
+        const blocks = caseStudy.querySelectorAll('.case-study-header, .case-study-block, .case-study-meta, .project-actions');
+        gsap.set(blocks, { opacity: 0, y: 30 });
+        
+        ScrollTrigger.create({
+            trigger: caseStudy,
+            start: 'top 75%',
+            onEnter: () => {
+                gsap.to(blocks, {
+                    opacity: 1,
+                    y: 0,
+                    stagger: 0.15,
+                    duration: 1,
+                    ease: 'power4.out',
+                });
+            },
+            once: true,
         });
     });
 
@@ -506,18 +531,32 @@ function initAnimations() {
     }
 
     // ── Featured Project: Subtle Tilt on Hover ──
-    const slider = document.querySelector('.project-slider');
-    if (slider) {
-        const card = slider.closest('.featured-card');
+    const caseVisuals = document.querySelectorAll('.case-study-visual');
+    caseVisuals.forEach(visual => {
+        gsap.to(visual, {
+            scrollTrigger: {
+                trigger: visual.closest('.featured-case-study'),
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1,
+            },
+            y: 40,
+            ease: 'none'
+        });
+    });
+
+    const projectSliders = document.querySelectorAll('.project-slider');
+    projectSliders.forEach(slider => {
+        const card = slider.closest('.featured-case-study');
         if (card) {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const xPct = (e.clientX - rect.left) / rect.width - 0.5;
                 const yPct = (e.clientY - rect.top) / rect.height - 0.5;
                 gsap.to(slider, {
-                    rotateY: xPct * 6,
-                    rotateX: -yPct * 6,
-                    duration: 0.4,
+                    rotateY: xPct * 4,
+                    rotateX: -yPct * 4,
+                    duration: 0.6,
                     ease: 'power2.out',
                 });
             });
@@ -525,12 +564,12 @@ function initAnimations() {
                 gsap.to(slider, {
                     rotateY: 0,
                     rotateX: 0,
-                    duration: 0.6,
+                    duration: 0.8,
                     ease: 'power2.out',
                 });
             });
         }
-    }
+    });
 
     // ── Achievement Cards: Staggered Entrance ──
     const achievementItems = document.querySelectorAll('.achievement-list li');

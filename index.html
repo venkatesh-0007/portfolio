@@ -47,16 +47,12 @@
         <section class="hero theme--dark" id="home">
             <div class="grid-highlight"></div>
             <div class="container">
-                <div class="hero-status reveal">
-                    <span class="status-dot"></span>
-                    <span class="status-text">Available for Opportunities</span>
-                </div>
 
                 <h1 class="hero-name">
                     <span class="line"><span class="word"><span
                                 class="name-trigger name-hover">Amudalapalli</span></span></span>
-                    <span class="line"><span class="word"><span class="name-trigger name-hover">Venkateswara
-                                Rao</span></span> <span class="word accent"></span></span>
+                    <span class="line"><span class="word"><span class="name-trigger name-hover">Venkateswara</span></span></span>
+                    <span class="line"><span class="word"><span class="name-trigger name-hover">Rao</span></span> <span class="word accent"></span></span>
                 </h1>
 
                 <div class="hero-meta">
@@ -152,50 +148,141 @@
                 </div>
 
                 <!-- Featured Project — Case Study -->
-                <div class="featured-card reveal">
-                    <div class="project-slider" data-slider="parking">
-                        <div class="slider-wrapper">
-                            <img src="assets/img/projects/parking_1.jpg" alt="Smart Parking 1" class="slider-img active"
-                                onerror="this.src='https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&q=80&w=800'">
-                            <img src="assets/img/projects/parking_2.jpg" alt="Smart Parking 2" class="slider-img"
-                                onerror="this.src='https://images.unsplash.com/photo-1590674899484-13da0d1b58f5?auto=format&fit=crop&q=80&w=800'">
-                            <img src="assets/img/projects/parking_3.jpg" alt="Smart Parking 3" class="slider-img"
-                                onerror="this.src='https://images.unsplash.com/photo-1470224114660-3f6686c562eb?auto=format&fit=crop&q=80&w=800'">
-                        </div>
-                        <div class="slider-nav">
-                            <button class="slider-btn prev" aria-label="Previous Slide">&larr;</button>
-                            <button class="slider-btn next" aria-label="Next Slide">&rarr;</button>
-                        </div>
-                        <div class="slider-dots"></div>
-                        <div class="slider-progress-container">
-                            <div class="slider-progress-bar"></div>
-                        </div>
-                        <span class="tag">Featured Project</span>
-                    </div>
-                    <div class="project-info">
-                        <span class="project-num">01 — Case Study</span>
-                        <h3 class="project-title">Smart Parking<br>System</h3>
-                        <p class="project-desc project-problem">Parking lots lack real-time monitoring, forcing drivers
-                            to search blindly for open slots — wasting time and fuel.</p>
-                        <p class="project-desc project-solution">Built an AI-powered system using computer vision to
-                            detect and display parking slot availability in real-time through a modern web dashboard.</p>
-                        <div class="project-features">
-                            <span>Real-time Detection</span>
-                            <span>License Plate OCR</span>
-                            <span>Auto-logging</span>
-                            <span>Dark / Light Mode</span>
-                        </div>
-                        <div class="project-tech">
-                            <span class="tech-label">Stack</span>
-                            <div class="tech-pills">
-                                <span>Python</span>
-                                <span>OpenCV</span>
-                                <span>FastAPI</span>
-                                <span>JavaScript</span>
+                <div class="featured-case-study reveal">
+                    <div class="case-study-visual">
+                        <div class="project-slider" data-slider="parking">
+                            <div class="slider-wrapper">
+                                <img src="assets/img/projects/Smart Parking System/parking_1.jpg" alt="Smart Parking Dashboard" class="slider-img active"
+                                    onerror="this.src='https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&q=80&w=1200'">
+                                <img src="assets/img/projects/Smart Parking System/parking_2.jpg" alt="Smart Parking System Architecture" class="slider-img"
+                                    onerror="this.src='https://images.unsplash.com/photo-1590674899484-13da0d1b58f5?auto=format&fit=crop&q=80&w=1200'">
+                                <img src="assets/img/projects/Smart Parking System/parking_3.jpg" alt="Smart Parking OCR" class="slider-img"
+                                    onerror="this.src='https://images.unsplash.com/photo-1470224114660-3f6686c562eb?auto=format&fit=crop&q=80&w=1200'">
+                            </div>
+                            <div class="slider-progress-container">
+                                <div class="slider-progress-bar"></div>
                             </div>
                         </div>
-                        <div class="project-actions">
-                            <a href="https://github.com/venkatesh-0007/Smart_Park" target="_blank" class="text-link">View on GitHub →</a>
+                        <div class="slider-controls">
+                            <div class="slider-dots"></div>
+                            <div class="slider-nav">
+                                <button class="slider-btn prev" aria-label="Previous Slide">&larr;</button>
+                                <button class="slider-btn next" aria-label="Next Slide">&rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="case-study-content">
+                        <div class="case-study-header">
+                            <span class="project-num">01 — Case Study</span>
+                            <h3 class="project-title">Smart Parking System</h3>
+                        </div>
+
+                        <div class="case-study-body">
+                            <div class="case-study-block">
+                                <h4 class="case-study-label">The Challenge</h4>
+                                <p class="project-desc project-problem">Parking lots lack real-time monitoring, forcing drivers to search blindly for open slots — wasting time, increasing fuel consumption, and causing unnecessary friction.</p>
+                            </div>
+
+                            <div class="case-study-block">
+                                <h4 class="case-study-label">The Solution</h4>
+                                <p class="project-desc project-solution">Built an AI-powered ecosystem utilizing computer vision to detect and visualize parking slot availability in real-time through a premium, low-latency web dashboard.</p>
+                            </div>
+
+                            <div class="case-study-meta">
+                                <div class="project-features">
+                                    <span>Real-time Detection</span>
+                                    <span>License Plate OCR</span>
+                                    <span>Auto-logging</span>
+                                    <span>Dark / Light Mode</span>
+                                </div>
+                                <div class="project-tech">
+                                    <span class="tech-label">Stack</span>
+                                    <div class="tech-pills">
+                                        <span>Python</span>
+                                        <span>OpenCV</span>
+                                        <span>FastAPI</span>
+                                        <span>JavaScript</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-actions">
+                                <a href="https://github.com/venkatesh-0007/Smart_Park" target="_blank" class="btn-premium btn-premium--outline">
+                                    <span>View Source Code</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smart Drop Project — Case Study -->
+                <div class="featured-case-study reveal">
+                    <div class="case-study-visual">
+                        <div class="project-slider" data-slider="smartdrop">
+                            <div class="slider-wrapper">
+                                <img src="assets/img/projects/Smart Drop/Smart_drop_1.png" alt="Smart Drop Interface" class="slider-img active"
+                                    onerror="this.src='https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=1200'">
+                                <img src="assets/img/projects/Smart Drop/Smart_drop_2.png" alt="Smart Drop AI" class="slider-img"
+                                    onerror="this.src='https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&q=80&w=1200'">
+                                <img src="assets/img/projects/Smart Drop/Smart_drop_3.png" alt="Smart Drop Drive Sync" class="slider-img"
+                                    onerror="this.src='https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=1200'">
+                                <img src="assets/img/projects/Smart Drop/Smart_drop_4.png" alt="Smart Drop Vault" class="slider-img"
+                                    onerror="this.src='https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=1200'">
+                            </div>
+                            <div class="slider-progress-container">
+                                <div class="slider-progress-bar"></div>
+                            </div>
+                        </div>
+                        <div class="slider-controls">
+                            <div class="slider-dots"></div>
+                            <div class="slider-nav">
+                                <button class="slider-btn prev" aria-label="Previous Slide">&larr;</button>
+                                <button class="slider-btn next" aria-label="Next Slide">&rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="case-study-content">
+                        <div class="case-study-header">
+                            <span class="project-num">02 — Chrome Extension</span>
+                            <h3 class="project-title">Smart Drop</h3>
+                        </div>
+
+                        <div class="case-study-body">
+                            <div class="case-study-block">
+                                <h4 class="case-study-label">The Challenge</h4>
+                                <p class="project-desc project-problem">Managing files, accessing cloud storage, and utilizing AI workflows often requires switching between multiple tabs and applications, breaking focus and productivity.</p>
+                            </div>
+
+                            <div class="case-study-block">
+                                <h4 class="case-study-label">The Solution</h4>
+                                <p class="project-desc project-solution">Developed a seamless browser extension providing a modern, Apple-inspired floating vault. It enables drag-and-drop file management, deep Google Drive integration, and instant AI text summarization from any webpage.</p>
+                            </div>
+
+                            <div class="case-study-meta">
+                                <div class="project-features">
+                                    <span>Drag & Drop Vault</span>
+                                    <span>Drive Sync</span>
+                                    <span>AI Summarization</span>
+                                    <span>Floating UI</span>
+                                </div>
+                                <div class="project-tech">
+                                    <span class="tech-label">Stack</span>
+                                    <div class="tech-pills">
+                                        <span>JavaScript</span>
+                                        <span>Manifest V3</span>
+                                        <span>IndexedDB</span>
+                                        <span>Shadow DOM</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-actions">
+                                <a href="https://github.com/venkatesh-0007/Smart_Drop" target="_blank" class="btn-premium btn-premium--outline">
+                                    <span>View Source Code</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -203,7 +290,7 @@
                 <!-- Other Projects -->
                 <div class="other-projects">
                     <div class="other-card reveal">
-                        <span class="project-num">02</span>
+                        <span class="project-num">03</span>
                         <h3 class="project-title">Stock Price Prediction</h3>
                         <p class="project-desc">Predicting market trends using Machine Learning algorithms and
                             historical data analysis.</p>
@@ -213,7 +300,7 @@
                         </div>
                     </div>
                     <div class="other-card reveal">
-                        <span class="project-num">03</span>
+                        <span class="project-num">04</span>
                         <h3 class="project-title">Sales Demand Analysis</h3>
                         <p class="project-desc">Advanced data visualization and trend analysis for business sales
                             optimization.</p>

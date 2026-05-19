@@ -1208,7 +1208,7 @@ body.is-hovering-name .hero-name {
 }
 
 .cert-name em {
-    color: var(--fg-muted);
+    color: var(--current-fg-muted);
     font-style: normal;
     font-size: 13px;
     margin-left: 8px;

@@ -53,9 +53,15 @@ function initProjectSliders() {
         function updateAspectRatio() {
             const activeImg = images[currentIndex];
             if (activeImg.naturalWidth && activeImg.naturalHeight) {
-                slider.style.aspectRatio = `${activeImg.naturalWidth} / ${activeImg.naturalHeight}`;
+                if (window.innerWidth > 768) {
+                    slider.style.aspectRatio = `${activeImg.naturalWidth} / ${activeImg.naturalHeight}`;
+                } else {
+                    slider.style.aspectRatio = '';
+                }
             }
         }
+
+        window.addEventListener('resize', updateAspectRatio);
 
         function checkVertical(img) {
             if (img.naturalHeight > img.naturalWidth) img.classList.add('vertical');
@@ -365,11 +371,17 @@ function initNavbar() {
     if (toggle && links) {
         toggle.addEventListener('click', () => {
             links.classList.toggle('open');
+            toggle.classList.toggle('open');
+            document.body.classList.toggle('nav-open');
         });
 
         // Close on link click
         links.querySelectorAll('a').forEach(a => {
-            a.addEventListener('click', () => links.classList.remove('open'));
+            a.addEventListener('click', () => {
+                links.classList.remove('open');
+                toggle.classList.remove('open');
+                document.body.classList.remove('nav-open');
+            });
         });
     }
 }
@@ -448,7 +460,7 @@ function initAnimations() {
         gsap.to(el, {
             scrollTrigger: {
                 trigger: el,
-                start: 'top 85%',
+                start: 'top 95%',
                 toggleActions: 'play none none none',
             },
             opacity: 1,

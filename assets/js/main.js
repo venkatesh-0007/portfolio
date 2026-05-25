@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavbar();
     initScrollProgress();
     initAnimations();
+    initDocumindVideo();
 });
 
 // ═══════════════════════════════════════════
@@ -620,6 +621,25 @@ function initAnimations() {
                 });
             },
             once: true,
+        });
+    }
+}
+
+// ═══════════════════════════════════════════
+//  DOCUMIND VIDEO TOGGLE
+// ═══════════════════════════════════════════
+function initDocumindVideo() {
+    const video = document.getElementById('documind-video');
+    const playBtn = document.getElementById('documind-play-btn');
+    if (video && playBtn) {
+        playBtn.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+                playBtn.innerText = 'Pause';
+            } else {
+                video.pause();
+                playBtn.innerText = 'Play';
+            }
         });
     }
 }

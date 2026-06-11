@@ -2302,9 +2302,10 @@ body.modal-open {
     transition: width linear;
 }
 
-/* Vertical Panning Effect (Removed, slider now resizes dynamically) */
+/* Vertical Panning Effect */
 .slider-img.vertical {
-    object-position: center;
+    object-fit: cover;
+    object-position: top;
 }
 
 /* ═══════════════════════════════════════════ */

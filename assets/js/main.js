@@ -51,22 +51,8 @@ function initProjectSliders() {
 
         const dots = visual.querySelectorAll('.dot');
 
-        function updateAspectRatio() {
-            const activeImg = images[currentIndex];
-            if (activeImg.naturalWidth && activeImg.naturalHeight) {
-                if (window.innerWidth > 768) {
-                    slider.style.aspectRatio = `${activeImg.naturalWidth} / ${activeImg.naturalHeight}`;
-                } else {
-                    slider.style.aspectRatio = '';
-                }
-            }
-        }
-
-        window.addEventListener('resize', updateAspectRatio);
-
         function checkVertical(img) {
             if (img.naturalHeight > img.naturalWidth) img.classList.add('vertical');
-            if (img === images[currentIndex]) updateAspectRatio();
         }
 
         function goToSlide(index) {
@@ -77,7 +63,6 @@ function initProjectSliders() {
             
             images[currentIndex].classList.add('active');
             dots[currentIndex].classList.add('active');
-            updateAspectRatio();
         }
 
         function startAutoPlay() {

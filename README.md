@@ -71,10 +71,10 @@ An AI-powered application that autonomously scans any GitHub repository, deeply 
 
 <div align="center">
   <a href="mailto:amudalapalli.venkateswararao@gmail.com">
-    <img src="https://img.shields.io/badge/Email-00e5ff?style=for-the-badge&logo=gmail&logoColor=black" alt="Email" />
+    <img src="https://img.shields.io/badge/Email-100000?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
   </a>
   <a href="https://www.linkedin.com/in/amudalapalli-venkateswara-rao-968b5a26a">
-    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+    <img src="https://img.shields.io/badge/LinkedIn-100000?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
   </a>
   <a href="https://github.com/venkatesh-0007">
     <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />

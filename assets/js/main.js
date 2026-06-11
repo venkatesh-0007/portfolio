@@ -455,64 +455,7 @@ function initAnimations() {
             ease: 'power2.out',
         }, '-=0.3');
 
-    // ── Scroll-triggered Section Reveals ──
-    const revealEls = document.querySelectorAll('section:not(.hero) .reveal, footer .reveal');
-    revealEls.forEach((el, i) => {
-        gsap.to(el, {
-            scrollTrigger: {
-                trigger: el,
-                start: 'top 95%',
-                toggleActions: 'play none none none',
-            },
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power3.out',
-            delay: (i % 3) * 0.1,
-        });
-    });
 
-    // ── Case Study Stagger ──
-    const caseStudies = document.querySelectorAll('.featured-case-study');
-    caseStudies.forEach(caseStudy => {
-        const blocks = caseStudy.querySelectorAll('.case-study-header, .case-study-block, .case-study-meta, .project-actions');
-        gsap.set(blocks, { opacity: 0, y: 30 });
-        
-        ScrollTrigger.create({
-            trigger: caseStudy,
-            start: 'top 75%',
-            onEnter: () => {
-                gsap.to(blocks, {
-                    opacity: 1,
-                    y: 0,
-                    stagger: 0.15,
-                    duration: 1,
-                    ease: 'power4.out',
-                });
-            },
-            once: true,
-        });
-    });
-
-    // ── Skill Groups: Staggered Reveal ──
-    const skillGroups = document.querySelectorAll('.skill-group');
-    if (skillGroups.length) {
-        gsap.set(skillGroups, { opacity: 0, y: 20 });
-        ScrollTrigger.create({
-            trigger: '.skills-cols',
-            start: 'top 85%',
-            onEnter: () => {
-                gsap.to(skillGroups, {
-                    opacity: 1,
-                    y: 0,
-                    stagger: 0.1,
-                    duration: 0.7,
-                    ease: 'power3.out',
-                });
-            },
-            once: true,
-        });
-    }
 
     // ── Section Heading Parallax ──
     document.querySelectorAll('.section-heading').forEach(heading => {
@@ -584,45 +527,7 @@ function initAnimations() {
         }
     });
 
-    // ── Achievement Cards: Staggered Entrance ──
-    const achievementItems = document.querySelectorAll('.achievement-list li');
-    if (achievementItems.length) {
-        gsap.set(achievementItems, { opacity: 0, y: 16 });
-        ScrollTrigger.create({
-            trigger: '.achievement-list',
-            start: 'top 85%',
-            onEnter: () => {
-                gsap.to(achievementItems, {
-                    opacity: 1,
-                    y: 0,
-                    stagger: 0.08,
-                    duration: 0.6,
-                    ease: 'power3.out',
-                });
-            },
-            once: true,
-        });
-    }
 
-    // ── Certificate Cards: Staggered Entrance ──
-    const certItems = document.querySelectorAll('.cert-list li');
-    if (certItems.length) {
-        gsap.set(certItems, { opacity: 0, x: -12 });
-        ScrollTrigger.create({
-            trigger: '.cert-list',
-            start: 'top 85%',
-            onEnter: () => {
-                gsap.to(certItems, {
-                    opacity: 1,
-                    x: 0,
-                    stagger: 0.06,
-                    duration: 0.5,
-                    ease: 'power2.out',
-                });
-            },
-            once: true,
-        });
-    }
 }
 
 // ═══════════════════════════════════════════

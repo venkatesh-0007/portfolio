@@ -6,7 +6,7 @@ Building intelligent systems, advanced data models, and low-latency computer vis
 
 ---
 
-![Portfolio Showcase](assets/img/portfolio-preview.png)
+
 
 ## 📌 Featured Project
 

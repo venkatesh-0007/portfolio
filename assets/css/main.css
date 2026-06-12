@@ -36,6 +36,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -43,6 +44,7 @@ body {
     color: var(--fg);
     font-family: var(--sans);
     line-height: 1.5;
+    overflow-x: hidden;
     overflow-x: clip;
     -webkit-font-smoothing: antialiased;
 }
@@ -55,7 +57,8 @@ body.nav-open .navbar {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     background: transparent !important;
-    border-bottom-color: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
     transition: 
         padding 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
         background 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
@@ -409,7 +412,12 @@ button {
 @media (max-width: 768px) {
     .navbar {
         top: 16px;
-        min-width: calc(100vw - 32px);
+        left: 16px;
+        right: 16px;
+        transform: none;
+        width: auto;
+        min-width: 0;
+        max-width: none;
         padding: 8px 12px 8px 20px;
     }
 }
@@ -1793,6 +1801,10 @@ body.is-hovering-name .hero-name {
 
     .cert-list li {
         padding: 16px 20px;
+    }
+
+    .cert-list li::after {
+        display: none !important;
     }
 
     .cert-issuer {

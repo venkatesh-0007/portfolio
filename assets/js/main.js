@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //  PROJECT SLIDERS
 // ═══════════════════════════════════════════
 function initProjectSliders() {
-    const sliders = document.querySelectorAll('.project-slider');
+        const sliders = document.querySelectorAll('.project-slider');
     
     sliders.forEach(slider => {
         const visual = slider.closest('.case-study-visual');
@@ -34,6 +34,31 @@ function initProjectSliders() {
         const intervalTime = 5000;
         let autoPlayTimer;
 
+        function checkVertical(img) {
+            if (img.tagName.toLowerCase() === 'video') {
+                if (img.videoHeight > img.videoWidth) img.classList.add('vertical');
+            } else {
+                if (img.naturalHeight > img.naturalWidth) img.classList.add('vertical');
+            }
+        }
+
+        if (total <= 1) {
+            if (progressBar) progressBar.style.display = 'none';
+            const controls = visual?.querySelector('.slider-controls');
+            if (controls) controls.style.display = 'none';
+            
+            images.forEach(img => {
+                if (img.tagName.toLowerCase() === 'video') {
+                    if (img.readyState >= 1) checkVertical(img);
+                    else img.addEventListener('loadedmetadata', () => checkVertical(img));
+                } else {
+                    if (img.complete) checkVertical(img);
+                    else img.onload = () => checkVertical(img);
+                }
+            });
+            return;
+        }
+
         // Create dots
         images.forEach((img, i) => {
             const dot = document.createElement('span');
@@ -45,15 +70,16 @@ function initProjectSliders() {
             });
             dotsContainer.appendChild(dot);
 
-            if (img.complete) checkVertical(img);
-            else img.onload = () => checkVertical(img);
+            if (img.tagName.toLowerCase() === 'video') {
+                if (img.readyState >= 1) checkVertical(img);
+                else img.addEventListener('loadedmetadata', () => checkVertical(img));
+            } else {
+                if (img.complete) checkVertical(img);
+                else img.onload = () => checkVertical(img);
+            }
         });
 
         const dots = visual.querySelectorAll('.dot');
-
-        function checkVertical(img) {
-            if (img.naturalHeight > img.naturalWidth) img.classList.add('vertical');
-        }
 
         function goToSlide(index) {
             images[currentIndex].classList.remove('active');
@@ -80,7 +106,7 @@ function initProjectSliders() {
 
             autoPlayTimer = setTimeout(() => {
                 goToSlide(currentIndex + 1);
-                startAutoPlay(); // Recurse for next slide
+                startAutoPlay();
             }, intervalTime);
         }
 
@@ -110,9 +136,11 @@ function initProjectSliders() {
         // Initial Start
         startAutoPlay();
 
-        // Pause on hover
-        slider.addEventListener('mouseenter', stopAutoPlay);
-        slider.addEventListener('mouseleave', startAutoPlay);
+        // Pause on hover (only on hover-capable devices)
+        if (window.matchMedia('(hover: hover)').matches) {
+            slider.addEventListener('mouseenter', stopAutoPlay);
+            slider.addEventListener('mouseleave', startAutoPlay);
+        }
     });
 }
 
@@ -129,6 +157,10 @@ function initDocumentModal() {
     if (!modal || !closeBtn) return;
 
     const openModal = (url) => {
+        if (window.innerWidth <= 768) {
+            window.open(url, '_blank');
+            return;
+        }
         if (iframe) iframe.src = url;
         modal.classList.add('visible');
         document.body.classList.add('modal-open');
@@ -269,6 +301,13 @@ function initCursor() {
     const flashlight = document.getElementById('flashlight');
     if (!cursor) return;
 
+    // Skip custom cursor tracking on touch-only devices
+    if (!window.matchMedia('(hover: hover)').matches) {
+        cursor.style.display = 'none';
+        if (flashlight) flashlight.style.display = 'none';
+        return;
+    }
+
     // Show cursor only after first mouse move
     document.addEventListener('mousemove', (e) => {
         cursor.classList.add('visible');
@@ -393,6 +432,9 @@ function initScrollProgress() {
 function initAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 
+    // Prevent ScrollTrigger from recalculating positions and causing jumps when mobile address bar hides/shows
+    ScrollTrigger.config({ ignoreMobileResize: true });
+
     // ── Hero: Cinematic Entrance ──
     // Clear .reveal initial states on hero children (GSAP handles them)
     gsap.set('.hero .reveal', { opacity: 1, y: 0 });
@@ -441,56 +483,59 @@ function initAnimations() {
         }, '-=0.3');
 
 
-
-    // ── Section Heading Parallax ──
-    document.querySelectorAll('.section-heading').forEach(heading => {
-        gsap.to(heading, {
-            scrollTrigger: {
-                trigger: heading,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 0.5,
-            },
-            y: -20,
-            ease: 'none',
+    // Only run scroll-linked parallax animations on desktop/tablet to improve mobile scroll performance
+    if (window.innerWidth > 768) {
+        // ── Section Heading Parallax ──
+        document.querySelectorAll('.section-heading').forEach(heading => {
+            gsap.to(heading, {
+                scrollTrigger: {
+                    trigger: heading,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 0.5,
+                },
+                y: -20,
+                ease: 'none',
+            });
         });
-    });
 
-    // ── Background Glow Parallax ──
-    const glow = document.querySelector('.hero-glow');
-    if (glow) {
-        gsap.to(glow, {
-            scrollTrigger: {
-                trigger: '.hero',
-                start: 'top top',
-                end: 'bottom top',
-                scrub: true,
-            },
-            y: 150,
-            opacity: 0.3,
+        // ── Background Glow Parallax ──
+        const glow = document.querySelector('.hero-glow');
+        if (glow) {
+            gsap.to(glow, {
+                scrollTrigger: {
+                    trigger: '.hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true,
+                },
+                y: 150,
+                opacity: 0.3,
+            });
+        }
+
+        // ── Featured Project: Subtle Tilt on Hover ──
+        const caseVisuals = document.querySelectorAll('.case-study-visual');
+        caseVisuals.forEach(visual => {
+            gsap.to(visual, {
+                scrollTrigger: {
+                    trigger: visual.closest('.featured-case-study'),
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1,
+                },
+                y: 40,
+                ease: 'none'
+            });
         });
     }
-
-    // ── Featured Project: Subtle Tilt on Hover ──
-    const caseVisuals = document.querySelectorAll('.case-study-visual');
-    caseVisuals.forEach(visual => {
-        gsap.to(visual, {
-            scrollTrigger: {
-                trigger: visual.closest('.featured-case-study'),
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1,
-            },
-            y: 40,
-            ease: 'none'
-        });
-    });
 
     const projectSliders = document.querySelectorAll('.project-slider');
     projectSliders.forEach(slider => {
         const card = slider.closest('.featured-case-study');
         if (card) {
             card.addEventListener('mousemove', (e) => {
+                if (window.innerWidth <= 768) return;
                 const rect = card.getBoundingClientRect();
                 const xPct = (e.clientX - rect.left) / rect.width - 0.5;
                 const yPct = (e.clientY - rect.top) / rect.height - 0.5;
@@ -502,6 +547,7 @@ function initAnimations() {
                 });
             });
             card.addEventListener('mouseleave', () => {
+                if (window.innerWidth <= 768) return;
                 gsap.to(slider, {
                     rotateY: 0,
                     rotateX: 0,
@@ -511,8 +557,6 @@ function initAnimations() {
             });
         }
     });
-
-
 }
 
 // ═══════════════════════════════════════════

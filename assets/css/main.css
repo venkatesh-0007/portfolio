@@ -396,12 +396,12 @@ button {
         border-color 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
         backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
         -webkit-backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    background: rgba(15, 15, 15, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px) saturate(190%);
+    -webkit-backdrop-filter: blur(20px) saturate(190%);
+    border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 100px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .navbar .container {
@@ -423,34 +423,37 @@ button {
 }
 
 .navbar.scrolled {
-    background: rgba(12, 12, 12, 0.85);
-    border-color: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
 }
 
 .navbar--light {
-    background: rgba(12, 12, 12, 0.85) !important;
-    border-color: rgba(255, 255, 255, 0.12) !important;
+    background: rgba(15, 15, 15, 0.8) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .navbar--light.scrolled {
-    background: rgba(10, 10, 10, 0.9) !important;
-    border-color: rgba(255, 255, 255, 0.15) !important;
+    background: rgba(15, 15, 15, 0.9) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
-.navbar--light .logo,
-.navbar--light .nav-links a {
+.navbar--light .logo {
     color: #ffffff !important;
 }
 
+.navbar--light .nav-links a {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
 .navbar--light .btn--white {
-    background: var(--accent) !important;
+    background: #ffffff !important;
     color: #111111 !important;
 }
 
 .navbar .btn--white {
-    background: var(--accent);
-    color: #111111;
+    background: #111111;
+    color: #ffffff;
     border: none;
     padding: 8px 20px;
     border-radius: 100px;
@@ -463,19 +466,19 @@ button {
 .navbar .btn--white:hover {
     transform: scale(1.02);
     opacity: 0.95;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.10);
-    background: var(--accent);
-    color: #111111;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: #222222;
+    color: #ffffff;
 }
 
 .navbar--light .btn--white {
-    background: var(--accent);
+    background: #ffffff;
     color: #111111;
 }
 
 .navbar--light .btn--white:hover {
-    background: var(--accent);
-    color: #111111;
+    background: #eeeeee !important;
+    color: #111111 !important;
     opacity: 0.9;
 }
 
@@ -492,17 +495,9 @@ button {
     letter-spacing: -0.01em;
     position: relative;
     z-index: 1000;
-    color: #ffffff;
+    color: #111111;
     display: inline-flex;
     align-items: center;
-}
-
-.logo::before {
-    content: '⌘';
-    color: var(--accent);
-    margin-right: 8px;
-    font-size: 1.15em;
-    font-weight: 500;
 }
 
 .logo span {
@@ -517,7 +512,7 @@ button {
 .nav-links a {
     font-size: 13px;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(17, 17, 17, 0.6);
     letter-spacing: 0.02em;
     transition: color 0.3s;
     position: relative;
@@ -529,7 +524,7 @@ button {
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: var(--accent);
+    color: #000000;
 }
 
 .nav-cta {
@@ -549,7 +544,7 @@ button {
     display: block;
     width: 28px;
     height: 2px;
-    background: var(--fg);
+    background: #111111;
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
     transform-origin: center;
 }
@@ -580,8 +575,8 @@ button {
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: rgba(5, 5, 5, 0.5); /* Safe fallback */
-        background: color-mix(in srgb, var(--bg) 40%, transparent);
+        background: rgba(255, 255, 255, 0.85); /* Safe fallback */
+        background: color-mix(in srgb, var(--bg-light) 85%, transparent);
         backdrop-filter: saturate(180%) blur(40px);
         -webkit-backdrop-filter: saturate(180%) blur(40px);
         align-items: center;
@@ -623,26 +618,26 @@ button {
         font-size: 28px;
         font-family: var(--heading);
         font-weight: 800;
-        color: var(--fg);
+        color: #111111;
     }
 
     /* Light Theme Mobile Styles */
     .navbar--light .menu-toggle .bar {
-        background: var(--fg-light);
+        background: #ffffff !important;
     }
 
     .navbar--light .nav-links {
-        background: rgba(249, 247, 242, 0.5); /* Safe fallback */
-        background: color-mix(in srgb, var(--bg-light) 40%, transparent);
+        background: rgba(5, 5, 5, 0.85); /* Safe fallback */
+        background: color-mix(in srgb, var(--bg) 85%, transparent);
     }
 
     .navbar--light .nav-links.open a {
-        color: var(--fg-light);
+        color: #ffffff;
     }
 
     .navbar--light .nav-links.open a:hover,
     .navbar--light .nav-links.open a.active {
-        color: var(--fg-light);
+        color: #ffffff;
     }
 }
 

@@ -2022,7 +2022,7 @@ body.is-hovering-name .hero-name {
 
 .popup-image {
     width: 100%;
-    aspect-ratio: 1;
+    aspect-ratio: 1204 / 1606;
     border-radius: 12px;
     overflow: hidden;
     background: var(--bg);

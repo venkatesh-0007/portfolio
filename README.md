@@ -33,9 +33,9 @@ An AI-powered computer vision ecosystem designed to detect slot occupancy and vi
   An AI agent that scans codebase structures and automatically generates comprehensive developer documentation.
   `TypeScript` • `LLM Integration` • `Node.js` • [Repository ↗](https://github.com/venkatesh-0007/AI-Documind)
 
-* **Jarvis** — *Personal AI Hub*
-  A custom voice-enabled interface allowing developers to plug in custom models and API keys.
-  `HTML5` • `JavaScript` • `CSS3` • [Repository ↗](https://github.com/venkatesh-0007/Jarvis)
+* **Motion Shooter** — *Cross-Device Engineering*
+  A real-time cross-device interaction system that transforms a smartphone into a motion-controlled wireless game controller for browser-based gameplay.
+  `JavaScript` • `Node.js` • `Express` • `WebSockets` • [Repository ↗](https://github.com/venkatesh-0007/Motion_Shooter)
 
 ---
 

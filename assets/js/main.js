@@ -278,48 +278,84 @@ function initNameHover() {
     const popup = document.getElementById('info-popup');
     const overlay = document.getElementById('blur-overlay');
     const targets = document.querySelectorAll('.name-hover');
-    if (!popup || !targets.length || !overlay) return;
+    if (!popup || !targets.length) return;
 
     let isVisible = false;
     let leaveTimeout;
 
-    const movePopup = (e) => {
-        if (!isVisible) return;
-        
-        const x = e.clientX + 25;
-        const y = e.clientY + 25;
-        
-        const rect = popup.getBoundingClientRect();
-        let finalX = x;
-        let finalY = y;
-        
-        if (x + rect.width > window.innerWidth - 20) {
-            finalX = e.clientX - rect.width - 25;
+    const positionPopup = (clientX, clientY) => {
+        const popupWidth = popup.offsetWidth || 280;
+        const popupHeight = popup.offsetHeight || 360;
+        const offset = 20;
+
+        let x = clientX + offset;
+        let y = clientY + offset;
+
+        // Prevent overflow on right
+        if (x + popupWidth > window.innerWidth - 16) {
+            x = clientX - popupWidth - offset;
         }
-        if (y + rect.height > window.innerHeight - 20) {
-            finalY = e.clientY - rect.height - 25;
+        // Prevent overflow on bottom
+        if (y + popupHeight > window.innerHeight - 16) {
+            y = clientY - popupHeight - offset;
         }
 
-        gsap.set(popup, { left: finalX, top: finalY });
+        // Keep inside screen bounds
+        x = Math.max(16, Math.min(x, window.innerWidth - popupWidth - 16));
+        y = Math.max(16, Math.min(y, window.innerHeight - popupHeight - 16));
+
+        popup.style.left = `${x}px`;
+        popup.style.top = `${y}px`;
+    };
+
+    const showPopup = (e) => {
+        clearTimeout(leaveTimeout);
+        isVisible = true;
+        if (e && typeof e.clientX === 'number') {
+            positionPopup(e.clientX, e.clientY);
+        }
+        popup.classList.add('visible');
+        if (overlay) overlay.classList.add('visible');
+        document.body.classList.add('is-hovering-name');
+    };
+
+    const hidePopup = () => {
+        leaveTimeout = setTimeout(() => {
+            isVisible = false;
+            popup.classList.remove('visible');
+            if (overlay) overlay.classList.remove('visible');
+            document.body.classList.remove('is-hovering-name');
+        }, 120);
     };
 
     targets.forEach(target => {
-        target.addEventListener('mouseenter', () => {
-            clearTimeout(leaveTimeout);
-            isVisible = true;
-            popup.classList.add('visible');
-            document.body.classList.add('is-hovering-name');
+        target.addEventListener('mouseenter', (e) => {
+            showPopup(e);
+        });
+
+        target.addEventListener('mousemove', (e) => {
+            if (!isVisible) {
+                showPopup(e);
+            } else {
+                positionPopup(e.clientX, e.clientY);
+            }
         });
 
         target.addEventListener('mouseleave', () => {
-            leaveTimeout = setTimeout(() => {
-                isVisible = false;
-                popup.classList.remove('visible');
-                document.body.classList.remove('is-hovering-name');
-            }, 20);
+            hidePopup();
         });
+    });
 
-        target.addEventListener('mousemove', movePopup);
+    popup.addEventListener('mouseenter', () => {
+        clearTimeout(leaveTimeout);
+        isVisible = true;
+        popup.classList.add('visible');
+        if (overlay) overlay.classList.add('visible');
+        document.body.classList.add('is-hovering-name');
+    });
+
+    popup.addEventListener('mouseleave', () => {
+        hidePopup();
     });
 }
 

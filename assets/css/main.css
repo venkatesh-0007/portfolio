@@ -760,8 +760,8 @@ body.is-hovering-name .hero-name {
 }
 
 .name-trigger {
-    display: inline;
-    pointer-events: auto;
+    display: inline-block;
+    pointer-events: auto !important;
 }
 
 .hero-name .accent {

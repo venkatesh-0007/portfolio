@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
 //  PROJECT SLIDERS
 // ═══════════════════════════════════════════
 function initProjectSliders() {
-        const sliders = document.querySelectorAll('.project-slider');
+    const sliders = document.querySelectorAll('.project-slider');
+    if (!sliders.length) return;
     
     sliders.forEach(slider => {
         const visual = slider.closest('.case-study-visual');
@@ -514,50 +515,33 @@ function initAnimations() {
             });
         }
 
-        // ── Featured Project: Subtle Tilt on Hover ──
-        const caseVisuals = document.querySelectorAll('.case-study-visual');
-        caseVisuals.forEach(visual => {
-            gsap.to(visual, {
-                scrollTrigger: {
-                    trigger: visual.closest('.featured-case-study'),
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: 1,
-                },
-                y: 40,
-                ease: 'none'
-            });
-        });
-    }
-
-    const projectSliders = document.querySelectorAll('.project-slider');
-    projectSliders.forEach(slider => {
-        const card = slider.closest('.featured-case-study');
-        if (card) {
+        // ── Project Cards: Subtle 3D Tilt on Hover ──
+        const projectCards = document.querySelectorAll('.project-card');
+        projectCards.forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 if (window.innerWidth <= 768) return;
                 const rect = card.getBoundingClientRect();
                 const xPct = (e.clientX - rect.left) / rect.width - 0.5;
                 const yPct = (e.clientY - rect.top) / rect.height - 0.5;
-                gsap.to(slider, {
-                    rotateY: xPct * 4,
-                    rotateX: -yPct * 4,
-                    duration: 0.6,
+                gsap.to(card, {
+                    rotateY: xPct * 3,
+                    rotateX: -yPct * 3,
+                    duration: 0.5,
                     ease: 'power2.out',
+                    transformPerspective: 1000,
                 });
             });
             card.addEventListener('mouseleave', () => {
                 if (window.innerWidth <= 768) return;
-                gsap.to(slider, {
+                gsap.to(card, {
                     rotateY: 0,
                     rotateX: 0,
-                    duration: 0.8,
+                    duration: 0.6,
                     ease: 'power2.out',
                 });
             });
-        }
-    });
-}
+        });
+    }
 
 // ═══════════════════════════════════════════
 //  DOCUMIND VIDEO TOGGLE

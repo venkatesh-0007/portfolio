@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCursor();
     initNameHover();
     initDocumentModal();
+    initContactForm();
     initProjectSliders();
     initNavbar();
     initScrollProgress();
@@ -25,9 +26,9 @@ function initProjectSliders() {
     sliders.forEach(slider => {
         const visual = slider.closest('.case-study-visual');
         const images = slider.querySelectorAll('.slider-img');
-        const prevBtn = visual.querySelector('.prev');
-        const nextBtn = visual.querySelector('.next');
-        const dotsContainer = visual.querySelector('.slider-dots');
+        const prevBtn = visual?.querySelector('.prev');
+        const nextBtn = visual?.querySelector('.next');
+        const dotsContainer = visual?.querySelector('.slider-dots');
         const progressBar = slider.querySelector('.slider-progress-bar');
         
         let currentIndex = 0;
@@ -69,7 +70,7 @@ function initProjectSliders() {
                 goToSlide(i);
                 resetAutoPlay();
             });
-            dotsContainer.appendChild(dot);
+            if (dotsContainer) dotsContainer.appendChild(dot);
 
             if (img.tagName.toLowerCase() === 'video') {
                 if (img.readyState >= 1) checkVertical(img);
@@ -80,16 +81,15 @@ function initProjectSliders() {
             }
         });
 
-        const dots = visual.querySelectorAll('.dot');
-
         function goToSlide(index) {
             images[currentIndex].classList.remove('active');
-            dots[currentIndex].classList.remove('active');
+            const dots = visual?.querySelectorAll('.dot');
+            if (dots && dots[currentIndex]) dots[currentIndex].classList.remove('active');
             
             currentIndex = (index + total) % total;
             
             images[currentIndex].classList.add('active');
-            dots[currentIndex].classList.add('active');
+            if (dots && dots[currentIndex]) dots[currentIndex].classList.add('active');
         }
 
         function startAutoPlay() {
@@ -179,12 +179,20 @@ function initDocumentModal() {
         openModal('assets/docs/resume.pdf');
     });
 
-    // Certificate Triggers
-    const certItems = document.querySelectorAll('.cert-list li');
+    // Certificate Triggers (all [data-doc] items)
+    const certItems = document.querySelectorAll('[data-doc]');
     certItems.forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
             const docPath = item.getAttribute('data-doc');
             if (docPath) openModal(docPath);
+        });
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const docPath = item.getAttribute('data-doc');
+                if (docPath) openModal(docPath);
+            }
         });
     });
 
@@ -194,6 +202,70 @@ function initDocumentModal() {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.classList.contains('visible')) {
             closeModal();
+        }
+    });
+}
+
+// ═══════════════════════════════════════════
+//  CONTACT FORM HANDLER
+// ═══════════════════════════════════════════
+function initContactForm() {
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+
+    const nameInput = document.getElementById('contactName');
+    const emailInput = document.getElementById('contactEmail');
+    const messageInput = document.getElementById('contactMessage');
+    const submitBtn = document.getElementById('contactSubmit');
+    const statusDiv = document.getElementById('contactStatus');
+
+    function showStatus(msg, type) {
+        if (!statusDiv) return;
+        statusDiv.textContent = msg;
+        statusDiv.className = `form-status show ${type}`;
+    }
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name = nameInput?.value.trim() || '';
+        const email = emailInput?.value.trim() || '';
+        const message = messageInput?.value.trim() || '';
+
+        if (!name || !email || !message) {
+            showStatus('Please fill in all fields (Name, Email, and Message).', 'error');
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showStatus('Please enter a valid email address.', 'error');
+            return;
+        }
+
+        const recipient = 'amudalapalli.venkateswararao@gmail.com';
+        const subject = encodeURIComponent(`Portfolio Inquiry from ${name}`);
+        const body = encodeURIComponent(
+            `Hi Venkatesh,\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n\n---\nSent via Portfolio Website`
+        );
+
+        const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${body}`;
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span>Opening Mail Client...</span>';
+
+            showStatus('Opening your email client to send your message. Thank you for reaching out!', 'success');
+
+            // Trigger mailto composer
+            window.location.href = mailtoUrl;
+
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+                form.reset();
+            }, 2500);
         }
     });
 }

@@ -305,103 +305,77 @@ function initGridHighlight() {
 function initNameHover() {
     const popup = document.getElementById('info-popup');
     const overlay = document.getElementById('blur-overlay');
-    const heroName = document.querySelector('.hero-name');
-    const nameTriggers = document.querySelectorAll('.name-hover');
-    if (!popup || (!heroName && !nameTriggers.length)) return;
+    const targets = document.querySelectorAll('.name-hover');
+    if (!popup || !targets.length) return;
 
     let isVisible = false;
     let leaveTimeout;
 
-    const positionPopup = (clientX, clientY, sourceEl) => {
-        if (window.innerWidth <= 768) {
-            popup.style.left = '';
-            popup.style.top = '';
-            return;
+    // Use GSAP for buttery smooth follow (Original Animation)
+    const xTo = gsap.quickTo(popup, "left", { duration: 0.45, ease: "power3.out" });
+    const yTo = gsap.quickTo(popup, "top", { duration: 0.45, ease: "power3.out" });
+
+    const movePopup = (e) => {
+        if (!isVisible) return;
+
+        // Southeast Position: offset by 30px
+        const x = e.clientX + 30;
+        const y = e.clientY + 30;
+
+        // Clamp to window bounds
+        const rect = popup.getBoundingClientRect();
+        let finalX = x;
+        let finalY = y;
+
+        // If it would overflow right
+        if (x + rect.width > window.innerWidth - 20) {
+            finalX = e.clientX - rect.width - 30;
+        }
+        // If it would overflow bottom
+        if (y + rect.height > window.innerHeight - 20) {
+            finalY = e.clientY - rect.height - 30;
         }
 
-        const popupWidth = popup.offsetWidth || 280;
-        const popupHeight = popup.offsetHeight || 380;
-        const offset = 20;
-
-        let x, y;
-
-        if (typeof clientX === 'number' && typeof clientY === 'number') {
-            x = clientX + offset;
-            y = clientY + offset;
-        } else if (sourceEl) {
-            const rect = sourceEl.getBoundingClientRect();
-            x = rect.left + rect.width / 2;
-            y = rect.bottom + offset;
-        } else {
-            x = window.innerWidth / 2;
-            y = window.innerHeight / 2;
-        }
-
-        // Prevent overflow on right
-        if (x + popupWidth > window.innerWidth - 16) {
-            x = (typeof clientX === 'number' ? clientX : x) - popupWidth - offset;
-        }
-        // Prevent overflow on bottom
-        if (y + popupHeight > window.innerHeight - 16) {
-            y = (typeof clientY === 'number' ? clientY : y) - popupHeight - offset;
-        }
-
-        // Keep inside screen bounds
-        x = Math.max(16, Math.min(x, window.innerWidth - popupWidth - 16));
-        y = Math.max(16, Math.min(y, window.innerHeight - popupHeight - 16));
-
-        popup.style.left = `${x}px`;
-        popup.style.top = `${y}px`;
+        xTo(finalX);
+        yTo(finalY);
     };
 
-    const showPopup = (e) => {
-        clearTimeout(leaveTimeout);
-        isVisible = true;
-        const clientX = e?.clientX;
-        const clientY = e?.clientY;
-        const targetEl = e?.currentTarget || heroName;
-        positionPopup(clientX, clientY, targetEl);
-        popup.classList.add('visible');
-        if (overlay) overlay.classList.add('visible');
-        document.body.classList.add('is-hovering-name');
-    };
-
-    const hidePopup = (delay = 250) => {
-        clearTimeout(leaveTimeout);
-        leaveTimeout = setTimeout(() => {
-            isVisible = false;
-            popup.classList.remove('visible');
-            if (overlay) overlay.classList.remove('visible');
-            document.body.classList.remove('is-hovering-name');
-        }, delay);
-    };
-
-    // Attach to heroName heading and individual name spans
-    const interactElements = new Set([heroName, ...nameTriggers].filter(Boolean));
-
-    interactElements.forEach(el => {
-        el.addEventListener('mouseenter', (e) => {
-            showPopup(e);
+    targets.forEach(target => {
+        target.addEventListener('mouseenter', (e) => {
+            clearTimeout(leaveTimeout);
+            isVisible = true;
+            popup.classList.add('visible');
+            if (overlay) overlay.classList.add('visible');
+            document.body.classList.add('is-hovering-name');
+            movePopup(e);
         });
 
-        el.addEventListener('mousemove', (e) => {
-            if (!isVisible) {
-                showPopup(e);
-            } else {
-                positionPopup(e.clientX, e.clientY, el);
-            }
+        target.addEventListener('mouseleave', () => {
+            leaveTimeout = setTimeout(() => {
+                isVisible = false;
+                popup.classList.remove('visible');
+                if (overlay) overlay.classList.remove('visible');
+                document.body.classList.remove('is-hovering-name');
+            }, 80);
         });
 
-        el.addEventListener('mouseleave', () => {
-            hidePopup(250);
-        });
+        target.addEventListener('mousemove', movePopup);
 
-        el.addEventListener('click', (e) => {
+        // Click / touch toggle
+        target.addEventListener('click', (e) => {
             e.stopPropagation();
             if (isVisible) {
-                hidePopup(0);
+                isVisible = false;
+                popup.classList.remove('visible');
+                if (overlay) overlay.classList.remove('visible');
+                document.body.classList.remove('is-hovering-name');
             } else {
-                showPopup(e);
+                clearTimeout(leaveTimeout);
+                isVisible = true;
+                popup.classList.add('visible');
+                if (overlay) overlay.classList.add('visible');
+                document.body.classList.add('is-hovering-name');
+                movePopup(e);
             }
         });
     });
@@ -415,24 +389,38 @@ function initNameHover() {
     });
 
     popup.addEventListener('mouseleave', () => {
-        hidePopup(200);
+        leaveTimeout = setTimeout(() => {
+            isVisible = false;
+            popup.classList.remove('visible');
+            if (overlay) overlay.classList.remove('visible');
+            document.body.classList.remove('is-hovering-name');
+        }, 80);
     });
 
     if (overlay) {
         overlay.addEventListener('click', () => {
-            hidePopup(0);
+            isVisible = false;
+            popup.classList.remove('visible');
+            overlay.classList.remove('visible');
+            document.body.classList.remove('is-hovering-name');
         });
     }
 
     document.addEventListener('click', (e) => {
-        if (isVisible && !popup.contains(e.target) && !interactElements.has(e.target) && ![...interactElements].some(el => el.contains(e.target))) {
-            hidePopup(0);
+        if (isVisible && !popup.contains(e.target) && ![...targets].some(t => t.contains(e.target))) {
+            isVisible = false;
+            popup.classList.remove('visible');
+            if (overlay) overlay.classList.remove('visible');
+            document.body.classList.remove('is-hovering-name');
         }
     });
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && isVisible) {
-            hidePopup(0);
+            isVisible = false;
+            popup.classList.remove('visible');
+            if (overlay) overlay.classList.remove('visible');
+            document.body.classList.remove('is-hovering-name');
         }
     });
 }
@@ -716,6 +704,7 @@ function initAnimations() {
             });
         });
     }
+}
 
 // ═══════════════════════════════════════════
 //  DOCUMIND VIDEO TOGGLE

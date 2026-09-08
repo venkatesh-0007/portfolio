@@ -340,6 +340,20 @@ function initNameHover() {
         yTo(finalY);
     };
 
+    const hidePopup = (delay = 50) => {
+        clearTimeout(leaveTimeout);
+        leaveTimeout = setTimeout(() => {
+            isVisible = false;
+            popup.classList.remove('visible');
+            if (overlay) overlay.classList.remove('visible');
+            setTimeout(() => {
+                if (!isVisible) {
+                    document.body.classList.remove('is-hovering-name');
+                }
+            }, 220);
+        }, delay);
+    };
+
     targets.forEach(target => {
         target.addEventListener('mouseenter', (e) => {
             clearTimeout(leaveTimeout);
@@ -351,12 +365,7 @@ function initNameHover() {
         });
 
         target.addEventListener('mouseleave', () => {
-            leaveTimeout = setTimeout(() => {
-                isVisible = false;
-                popup.classList.remove('visible');
-                if (overlay) overlay.classList.remove('visible');
-                document.body.classList.remove('is-hovering-name');
-            }, 80);
+            hidePopup(50);
         });
 
         target.addEventListener('mousemove', movePopup);
@@ -365,10 +374,7 @@ function initNameHover() {
         target.addEventListener('click', (e) => {
             e.stopPropagation();
             if (isVisible) {
-                isVisible = false;
-                popup.classList.remove('visible');
-                if (overlay) overlay.classList.remove('visible');
-                document.body.classList.remove('is-hovering-name');
+                hidePopup(0);
             } else {
                 clearTimeout(leaveTimeout);
                 isVisible = true;
@@ -389,38 +395,24 @@ function initNameHover() {
     });
 
     popup.addEventListener('mouseleave', () => {
-        leaveTimeout = setTimeout(() => {
-            isVisible = false;
-            popup.classList.remove('visible');
-            if (overlay) overlay.classList.remove('visible');
-            document.body.classList.remove('is-hovering-name');
-        }, 80);
+        hidePopup(50);
     });
 
     if (overlay) {
         overlay.addEventListener('click', () => {
-            isVisible = false;
-            popup.classList.remove('visible');
-            overlay.classList.remove('visible');
-            document.body.classList.remove('is-hovering-name');
+            hidePopup(0);
         });
     }
 
     document.addEventListener('click', (e) => {
         if (isVisible && !popup.contains(e.target) && ![...targets].some(t => t.contains(e.target))) {
-            isVisible = false;
-            popup.classList.remove('visible');
-            if (overlay) overlay.classList.remove('visible');
-            document.body.classList.remove('is-hovering-name');
+            hidePopup(0);
         }
     });
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && isVisible) {
-            isVisible = false;
-            popup.classList.remove('visible');
-            if (overlay) overlay.classList.remove('visible');
-            document.body.classList.remove('is-hovering-name');
+            hidePopup(0);
         }
     });
 }

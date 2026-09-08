@@ -311,33 +311,33 @@ function initNameHover() {
     let isVisible = false;
     let leaveTimeout;
 
-    // Use GSAP for buttery smooth follow (Original Animation)
-    const xTo = gsap.quickTo(popup, "left", { duration: 0.45, ease: "power3.out" });
-    const yTo = gsap.quickTo(popup, "top", { duration: 0.45, ease: "power3.out" });
-
     const movePopup = (e) => {
-        if (!isVisible) return;
-
-        // Southeast Position: offset by 30px
-        const x = e.clientX + 30;
-        const y = e.clientY + 30;
+        // Offset beside cursor
+        const offset = 20;
+        const x = e.clientX + offset;
+        const y = e.clientY + offset;
 
         // Clamp to window bounds
-        const rect = popup.getBoundingClientRect();
+        const popupWidth = popup.offsetWidth || 280;
+        const popupHeight = popup.offsetHeight || 380;
         let finalX = x;
         let finalY = y;
 
         // If it would overflow right
-        if (x + rect.width > window.innerWidth - 20) {
-            finalX = e.clientX - rect.width - 30;
+        if (x + popupWidth > window.innerWidth - 16) {
+            finalX = e.clientX - popupWidth - offset;
         }
         // If it would overflow bottom
-        if (y + rect.height > window.innerHeight - 20) {
-            finalY = e.clientY - rect.height - 30;
+        if (y + popupHeight > window.innerHeight - 16) {
+            finalY = e.clientY - popupHeight - offset;
         }
 
-        xTo(finalX);
-        yTo(finalY);
+        // Keep inside screen bounds
+        finalX = Math.max(16, Math.min(finalX, window.innerWidth - popupWidth - 16));
+        finalY = Math.max(16, Math.min(finalY, window.innerHeight - popupHeight - 16));
+
+        popup.style.left = `${finalX}px`;
+        popup.style.top = `${finalY}px`;
     };
 
     const hidePopup = (delay = 50) => {

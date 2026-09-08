@@ -284,8 +284,14 @@ function initNameHover() {
     let leaveTimeout;
 
     const positionPopup = (clientX, clientY) => {
+        if (window.innerWidth <= 768) {
+            popup.style.left = '';
+            popup.style.top = '';
+            return;
+        }
+
         const popupWidth = popup.offsetWidth || 280;
-        const popupHeight = popup.offsetHeight || 360;
+        const popupHeight = popup.offsetHeight || 380;
         const offset = 20;
 
         let x = clientX + offset;
@@ -319,13 +325,14 @@ function initNameHover() {
         document.body.classList.add('is-hovering-name');
     };
 
-    const hidePopup = () => {
+    const hidePopup = (delay = 250) => {
+        clearTimeout(leaveTimeout);
         leaveTimeout = setTimeout(() => {
             isVisible = false;
             popup.classList.remove('visible');
             if (overlay) overlay.classList.remove('visible');
             document.body.classList.remove('is-hovering-name');
-        }, 120);
+        }, delay);
     };
 
     targets.forEach(target => {
@@ -342,7 +349,16 @@ function initNameHover() {
         });
 
         target.addEventListener('mouseleave', () => {
-            hidePopup();
+            hidePopup(250);
+        });
+
+        target.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isVisible) {
+                hidePopup(0);
+            } else {
+                showPopup(e);
+            }
         });
     });
 
@@ -355,7 +371,25 @@ function initNameHover() {
     });
 
     popup.addEventListener('mouseleave', () => {
-        hidePopup();
+        hidePopup(200);
+    });
+
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            hidePopup(0);
+        });
+    }
+
+    document.addEventListener('click', (e) => {
+        if (isVisible && !popup.contains(e.target) && ![...targets].some(t => t.contains(e.target))) {
+            hidePopup(0);
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isVisible) {
+            hidePopup(0);
+        }
     });
 }
 
@@ -442,7 +476,7 @@ function initCursor() {
     });
 
     // Hover states
-    const hoverTargets = document.querySelectorAll('a, button, .other-card, .skill-group li');
+    const hoverTargets = document.querySelectorAll('a, button, .other-card, .skill-group li, .name-hover');
     hoverTargets.forEach(el => {
         el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
         el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));

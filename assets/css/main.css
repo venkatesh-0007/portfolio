@@ -741,15 +741,17 @@ button {
     z-index: 1; /* Base z-index */
 }
 
-/* When hovering, bring the whole title area up */
+/* When hovering, bring the whole title area up above blur overlay */
+body.is-hovering-name main,
+body.is-hovering-name .hero,
 body.is-hovering-name .hero-name {
     z-index: 10001;
+    position: relative;
 }
 
 .hero-name .line {
     display: block;
     overflow: hidden;
-    pointer-events: none;
     position: relative;
 }
 
@@ -2031,14 +2033,20 @@ body.is-hovering-name .hero-name {
         border-radius: 12px;
     }
 
-    /* Hide popup on touch devices */
-    .info-popup,
-    .blur-overlay {
-        display: none !important;
+    /* Responsive popup for smaller screens */
+    .info-popup {
+        width: min(320px, calc(100vw - 32px));
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -45%) scale(0.95);
+    }
+
+    .info-popup.visible {
+        transform: translate(-50%, -50%) scale(1);
     }
 
     .name-hover {
-        cursor: default;
+        cursor: pointer;
     }
 
     /* Section sizing */
@@ -2093,7 +2101,7 @@ body.is-hovering-name .hero-name {
     top: 0;
     left: 0;
     width: 280px;
-    background: rgba(20, 20, 20, 0.85);
+    background: rgba(20, 20, 20, 0.88);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 20px;
     padding: 16px;
@@ -2101,12 +2109,12 @@ body.is-hovering-name .hero-name {
     pointer-events: none;
     opacity: 0;
     visibility: hidden;
-    transform: translate(20px, 20px) scale(0.8);
+    transform: translate(0, 10px) scale(0.95);
     transition: 
-        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
-        opacity 0.4s ease, 
-        visibility 0.4s;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8);
+        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+        opacity 0.3s ease, 
+        visibility 0.3s;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
     will-change: transform, opacity;
@@ -2115,6 +2123,7 @@ body.is-hovering-name .hero-name {
 .info-popup.visible {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
     transform: translate(0, 0) scale(1);
 }
 
@@ -2125,15 +2134,15 @@ body.is-hovering-name .hero-name {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
     z-index: 10000;
     opacity: 0;
     visibility: hidden;
     transition: 
         opacity 0.35s ease, 
         visibility 0.35s;
-    pointer-events: none;
+    pointer-events: auto;
     will-change: opacity;
 }
 
@@ -2191,15 +2200,16 @@ body.is-hovering-name .hero-name {
 }
 
 .name-hover {
-    cursor: help;
-    color: var(--accent);
+    cursor: pointer;
+    color: inherit;
     position: relative;
     z-index: 10001;
-    transition: color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 .name-hover:hover {
-    color: var(--fg);
+    color: var(--accent);
+    text-shadow: 0 0 24px var(--accent-muted);
 }
 
 /* ═══════════════════════════════════════════ */

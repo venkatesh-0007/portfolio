@@ -677,22 +677,31 @@ button {
     overflow: hidden;
 }
 
+.hero .container,
+.contact .container,
+.footer .container {
+    position: relative;
+    z-index: 2;
+}
+
 .grid-highlight {
     position: absolute;
     inset: 0;
     background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+        linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.22) 1px, transparent 1px);
     background-size: 50px 50px;
-    mask-image: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black 0%, transparent 200px);
-    -webkit-mask-image: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black 0%, transparent 200px);
+    -webkit-mask-image: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), #000 0%, transparent 100%);
+    mask-image: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), #000 0%, transparent 100%);
     pointer-events: none;
     z-index: 1;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.3s ease;
 }
 
-.hero:hover .grid-highlight {
+.hero:hover .grid-highlight,
+.contact:hover .grid-highlight,
+.footer:hover .grid-highlight {
     opacity: 1;
 }
 
@@ -738,7 +747,7 @@ button {
     letter-spacing: -0.04em;
     margin-bottom: 32px;
     position: relative;
-    z-index: 1; /* Base z-index */
+    z-index: 2; /* Base z-index */
 }
 
 /* When hovering, bring the whole title area up above blur overlay */
@@ -757,7 +766,7 @@ body.is-hovering-name .hero-name {
 
 .hero-name .word {
     display: inline-block;
-    pointer-events: none;
+    pointer-events: auto;
     position: relative;
 }
 

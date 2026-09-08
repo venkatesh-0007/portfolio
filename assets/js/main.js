@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // initLenis();
     initSmoothAnchors();
     initCursor();
+    initGridHighlight();
     initNameHover();
     initDocumentModal();
     initContactForm();
@@ -272,18 +273,46 @@ function initContactForm() {
 
 
 // ═══════════════════════════════════════════
+//  GRID HIGHLIGHT TRACKING
+// ═══════════════════════════════════════════
+function initGridHighlight() {
+    const gridSections = document.querySelectorAll('.hero, .contact, .footer');
+    if (!gridSections.length) return;
+
+    gridSections.forEach(sec => {
+        const updateCoords = (clientX, clientY) => {
+            const rect = sec.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+            sec.style.setProperty('--mouse-x', `${x}px`);
+            sec.style.setProperty('--mouse-y', `${y}px`);
+        };
+
+        sec.addEventListener('mousemove', (e) => {
+            updateCoords(e.clientX, e.clientY);
+        });
+
+        sec.addEventListener('mouseenter', (e) => {
+            updateCoords(e.clientX, e.clientY);
+        });
+    });
+}
+
+
+// ═══════════════════════════════════════════
 //  NAME HOVER POPUP
 // ═══════════════════════════════════════════
 function initNameHover() {
     const popup = document.getElementById('info-popup');
     const overlay = document.getElementById('blur-overlay');
-    const targets = document.querySelectorAll('.name-hover');
-    if (!popup || !targets.length) return;
+    const heroName = document.querySelector('.hero-name');
+    const nameTriggers = document.querySelectorAll('.name-hover');
+    if (!popup || (!heroName && !nameTriggers.length)) return;
 
     let isVisible = false;
     let leaveTimeout;
 
-    const positionPopup = (clientX, clientY) => {
+    const positionPopup = (clientX, clientY, sourceEl) => {
         if (window.innerWidth <= 768) {
             popup.style.left = '';
             popup.style.top = '';
@@ -294,16 +323,27 @@ function initNameHover() {
         const popupHeight = popup.offsetHeight || 380;
         const offset = 20;
 
-        let x = clientX + offset;
-        let y = clientY + offset;
+        let x, y;
+
+        if (typeof clientX === 'number' && typeof clientY === 'number') {
+            x = clientX + offset;
+            y = clientY + offset;
+        } else if (sourceEl) {
+            const rect = sourceEl.getBoundingClientRect();
+            x = rect.left + rect.width / 2;
+            y = rect.bottom + offset;
+        } else {
+            x = window.innerWidth / 2;
+            y = window.innerHeight / 2;
+        }
 
         // Prevent overflow on right
         if (x + popupWidth > window.innerWidth - 16) {
-            x = clientX - popupWidth - offset;
+            x = (typeof clientX === 'number' ? clientX : x) - popupWidth - offset;
         }
         // Prevent overflow on bottom
         if (y + popupHeight > window.innerHeight - 16) {
-            y = clientY - popupHeight - offset;
+            y = (typeof clientY === 'number' ? clientY : y) - popupHeight - offset;
         }
 
         // Keep inside screen bounds
@@ -317,9 +357,10 @@ function initNameHover() {
     const showPopup = (e) => {
         clearTimeout(leaveTimeout);
         isVisible = true;
-        if (e && typeof e.clientX === 'number') {
-            positionPopup(e.clientX, e.clientY);
-        }
+        const clientX = e?.clientX;
+        const clientY = e?.clientY;
+        const targetEl = e?.currentTarget || heroName;
+        positionPopup(clientX, clientY, targetEl);
         popup.classList.add('visible');
         if (overlay) overlay.classList.add('visible');
         document.body.classList.add('is-hovering-name');
@@ -335,24 +376,27 @@ function initNameHover() {
         }, delay);
     };
 
-    targets.forEach(target => {
-        target.addEventListener('mouseenter', (e) => {
+    // Attach to heroName heading and individual name spans
+    const interactElements = new Set([heroName, ...nameTriggers].filter(Boolean));
+
+    interactElements.forEach(el => {
+        el.addEventListener('mouseenter', (e) => {
             showPopup(e);
         });
 
-        target.addEventListener('mousemove', (e) => {
+        el.addEventListener('mousemove', (e) => {
             if (!isVisible) {
                 showPopup(e);
             } else {
-                positionPopup(e.clientX, e.clientY);
+                positionPopup(e.clientX, e.clientY, el);
             }
         });
 
-        target.addEventListener('mouseleave', () => {
+        el.addEventListener('mouseleave', () => {
             hidePopup(250);
         });
 
-        target.addEventListener('click', (e) => {
+        el.addEventListener('click', (e) => {
             e.stopPropagation();
             if (isVisible) {
                 hidePopup(0);
@@ -381,7 +425,7 @@ function initNameHover() {
     }
 
     document.addEventListener('click', (e) => {
-        if (isVisible && !popup.contains(e.target) && ![...targets].some(t => t.contains(e.target))) {
+        if (isVisible && !popup.contains(e.target) && !interactElements.has(e.target) && ![...interactElements].some(el => el.contains(e.target))) {
             hidePopup(0);
         }
     });
@@ -461,18 +505,6 @@ function initCursor() {
             flashlight.style.left = e.clientX + 'px';
             flashlight.style.top = e.clientY + 'px';
         }
-
-        // Grid highlight tracking for sections with grid
-        const gridSections = document.querySelectorAll('.hero, .contact, .footer');
-        gridSections.forEach(sec => {
-            const rect = sec.getBoundingClientRect();
-            if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                sec.style.setProperty('--mouse-x', `${x}px`);
-                sec.style.setProperty('--mouse-y', `${y}px`);
-            }
-        });
     });
 
     // Hover states

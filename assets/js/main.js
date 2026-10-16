@@ -1,150 +1,16 @@
-// ── Global Lenis instance ──
-// let lenis;
-
 // ── Wait for DOM ──
 document.addEventListener('DOMContentLoaded', () => {
-    // initLenis();
     initSmoothAnchors();
     initCursor();
     initGridHighlight();
     initNameHover();
     initDocumentModal();
     initContactForm();
-    initProjectSliders();
     initNavbar();
     initScrollProgress();
     initAnimations();
-    initDocumindVideo();
 });
 
-// ═══════════════════════════════════════════
-//  PROJECT SLIDERS
-// ═══════════════════════════════════════════
-function initProjectSliders() {
-    const sliders = document.querySelectorAll('.project-slider');
-    if (!sliders.length) return;
-    
-    sliders.forEach(slider => {
-        const visual = slider.closest('.case-study-visual');
-        const images = slider.querySelectorAll('.slider-img');
-        const prevBtn = visual?.querySelector('.prev');
-        const nextBtn = visual?.querySelector('.next');
-        const dotsContainer = visual?.querySelector('.slider-dots');
-        const progressBar = slider.querySelector('.slider-progress-bar');
-        
-        let currentIndex = 0;
-        const total = images.length;
-        const intervalTime = 5000;
-        let autoPlayTimer;
-
-        function checkVertical(img) {
-            if (img.tagName.toLowerCase() === 'video') {
-                if (img.videoHeight > img.videoWidth) img.classList.add('vertical');
-            } else {
-                if (img.naturalHeight > img.naturalWidth) img.classList.add('vertical');
-            }
-        }
-
-        if (total <= 1) {
-            if (progressBar) progressBar.style.display = 'none';
-            const controls = visual?.querySelector('.slider-controls');
-            if (controls) controls.style.display = 'none';
-            
-            images.forEach(img => {
-                if (img.tagName.toLowerCase() === 'video') {
-                    if (img.readyState >= 1) checkVertical(img);
-                    else img.addEventListener('loadedmetadata', () => checkVertical(img));
-                } else {
-                    if (img.complete) checkVertical(img);
-                    else img.onload = () => checkVertical(img);
-                }
-            });
-            return;
-        }
-
-        // Create dots
-        images.forEach((img, i) => {
-            const dot = document.createElement('span');
-            dot.classList.add('dot');
-            if (i === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => {
-                goToSlide(i);
-                resetAutoPlay();
-            });
-            if (dotsContainer) dotsContainer.appendChild(dot);
-
-            if (img.tagName.toLowerCase() === 'video') {
-                if (img.readyState >= 1) checkVertical(img);
-                else img.addEventListener('loadedmetadata', () => checkVertical(img));
-            } else {
-                if (img.complete) checkVertical(img);
-                else img.onload = () => checkVertical(img);
-            }
-        });
-
-        function goToSlide(index) {
-            images[currentIndex].classList.remove('active');
-            const dots = visual?.querySelectorAll('.dot');
-            if (dots && dots[currentIndex]) dots[currentIndex].classList.remove('active');
-            
-            currentIndex = (index + total) % total;
-            
-            images[currentIndex].classList.add('active');
-            if (dots && dots[currentIndex]) dots[currentIndex].classList.add('active');
-        }
-
-        function startAutoPlay() {
-            stopAutoPlay();
-            
-            // Start the bar animation
-            if (progressBar) {
-                progressBar.style.transition = 'none';
-                progressBar.style.width = '0%';
-                setTimeout(() => {
-                    progressBar.style.transition = `width ${intervalTime}ms linear`;
-                    progressBar.style.width = '100%';
-                }, 20);
-            }
-
-            autoPlayTimer = setTimeout(() => {
-                goToSlide(currentIndex + 1);
-                startAutoPlay();
-            }, intervalTime);
-        }
-
-        function stopAutoPlay() {
-            clearTimeout(autoPlayTimer);
-            if (progressBar) {
-                progressBar.style.transition = 'none';
-                progressBar.style.width = '0%';
-            }
-        }
-
-        function resetAutoPlay() {
-            stopAutoPlay();
-            startAutoPlay();
-        }
-
-        prevBtn?.addEventListener('click', () => {
-            goToSlide(currentIndex - 1);
-            resetAutoPlay();
-        });
-        
-        nextBtn?.addEventListener('click', () => {
-            goToSlide(currentIndex + 1);
-            resetAutoPlay();
-        });
-
-        // Initial Start
-        startAutoPlay();
-
-        // Pause on hover (only on hover-capable devices)
-        if (window.matchMedia('(hover: hover)').matches) {
-            slider.addEventListener('mouseenter', stopAutoPlay);
-            slider.addEventListener('mouseleave', startAutoPlay);
-        }
-    });
-}
 
 
 // ═══════════════════════════════════════════
@@ -305,138 +171,268 @@ function initGridHighlight() {
 function initNameHover() {
     const popup = document.getElementById('info-popup');
     const overlay = document.getElementById('blur-overlay');
-    const targets = document.querySelectorAll('.name-hover');
-    if (!popup || !targets.length) return;
+    const heroName = document.querySelector('.hero-name');
+    if (!popup || !heroName) return;
+
+    // Elements that constitute the name entity
+    const line1Spans = Array.from(heroName.querySelectorAll('.line:first-child .name-hover'));
+    const line2Spans = Array.from(heroName.querySelectorAll('.line:nth-child(2) .name-hover'));
+    if (!line1Spans.length || !line2Spans.length) return;
 
     let isVisible = false;
-    let leaveTimeout;
+    let lastX = 0;
+    let lastY = 0;
 
-    const movePopup = (e) => {
-        // Offset beside cursor
-        const offset = 20;
-        const x = e.clientX + offset;
-        const y = e.clientY + offset;
-
-        // Clamp to window bounds
-        const popupWidth = popup.offsetWidth || 280;
-        const popupHeight = popup.offsetHeight || 380;
-        let finalX = x;
-        let finalY = y;
-
-        // If it would overflow right
-        if (x + popupWidth > window.innerWidth - 16) {
-            finalX = e.clientX - popupWidth - offset;
-        }
-        // If it would overflow bottom
-        if (y + popupHeight > window.innerHeight - 16) {
-            finalY = e.clientY - popupHeight - offset;
-        }
-
-        // Keep inside screen bounds
-        finalX = Math.max(16, Math.min(finalX, window.innerWidth - popupWidth - 16));
-        finalY = Math.max(16, Math.min(finalY, window.innerHeight - popupHeight - 16));
-
-        popup.style.left = `${finalX}px`;
-        popup.style.top = `${finalY}px`;
-    };
-
-    const hidePopup = (delay = 50) => {
-        clearTimeout(leaveTimeout);
-        leaveTimeout = setTimeout(() => {
-            isVisible = false;
-            popup.classList.remove('visible');
-            if (overlay) overlay.classList.remove('visible');
-            setTimeout(() => {
-                if (!isVisible) {
-                    document.body.classList.remove('is-hovering-name');
-                }
-            }, 220);
-        }, delay);
-    };
-
-    targets.forEach(target => {
-        target.addEventListener('mouseenter', (e) => {
-            clearTimeout(leaveTimeout);
-            isVisible = true;
-            popup.classList.add('visible');
-            if (overlay) overlay.classList.add('visible');
-            document.body.classList.add('is-hovering-name');
-            movePopup(e);
-        });
-
-        target.addEventListener('mouseleave', () => {
-            hidePopup(50);
-        });
-
-        target.addEventListener('mousemove', movePopup);
-
-        // Click / touch toggle
-        target.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (isVisible) {
-                hidePopup(0);
-            } else {
-                clearTimeout(leaveTimeout);
-                isVisible = true;
-                popup.classList.add('visible');
-                if (overlay) overlay.classList.add('visible');
-                document.body.classList.add('is-hovering-name');
-                movePopup(e);
-            }
-        });
+    // Reset styles so GSAP has full hardware-accelerated transform control
+    gsap.set(popup, {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        xPercent: 0,
+        yPercent: 0,
+        opacity: 0,
+        pointerEvents: 'none'
     });
-
-    popup.addEventListener('mouseenter', () => {
-        clearTimeout(leaveTimeout);
-        isVisible = true;
-        popup.classList.add('visible');
-        if (overlay) overlay.classList.add('visible');
-        document.body.classList.add('is-hovering-name');
-    });
-
-    popup.addEventListener('mouseleave', () => {
-        hidePopup(50);
-    });
-
     if (overlay) {
-        overlay.addEventListener('click', () => {
-            hidePopup(0);
+        gsap.set(overlay, {
+            opacity: 0,
+            pointerEvents: 'none'
         });
     }
 
-    document.addEventListener('click', (e) => {
-        if (isVisible && !popup.contains(e.target) && ![...targets].some(t => t.contains(e.target))) {
-            hidePopup(0);
+    // Measure exact geometric bounds of the two lines of the name
+    const getTightBounds = (spans) => {
+        let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+        let hasValidSpan = false;
+        spans.forEach(span => {
+            const r = span.getBoundingClientRect();
+            if (r.width > 0 && r.height > 0) {
+                hasValidSpan = true;
+                if (r.left < left) left = r.left;
+                if (r.right > right) right = r.right;
+                if (r.top < top) top = r.top;
+                if (r.bottom > bottom) bottom = r.bottom;
+            }
+        });
+        return hasValidSpan ? { left, right, top, bottom } : null;
+    };
+
+    // Check if point (x, y) is on the name as a unified entity
+    const isPointOnName = (x, y) => {
+        const b1 = getTightBounds(line1Spans);
+        const b2 = getTightBounds(line2Spans);
+        if (!b1 || !b2) return false;
+
+        const pad = 8; // Comfortable buffer around font glyphs
+
+        // 1. Inside Line 1 (Amudalapalli)
+        const inLine1 = (
+            x >= b1.left - pad &&
+            x <= b1.right + pad &&
+            y >= b1.top - pad &&
+            y <= b1.bottom + pad
+        );
+        if (inLine1) return true;
+
+        // 2. Inside Line 2 (Venkateswara Rao)
+        const inLine2 = (
+            x >= b2.left - pad &&
+            x <= b2.right + pad &&
+            y >= b2.top - pad &&
+            y <= b2.bottom + pad
+        );
+        if (inLine2) return true;
+
+        // 3. In the vertical bridging corridor between Line 1 and Line 2
+        // Line 1 is above Line 2. This connects the two lines vertically
+        // without including empty space to the right of Line 1.
+        if (y > b1.bottom - pad && y < b2.top + pad) {
+            const minLeft = Math.min(b1.left, b2.left) - pad;
+            const maxRight = Math.min(b1.right, b2.right) + pad;
+            if (x >= minLeft && x <= maxRight) {
+                return true;
+            }
         }
-    });
+
+        return false;
+    };
+
+    const getDownwardCoords = (e) => {
+        const popupWidth = popup.offsetWidth || 280;
+
+        // Horizontally center relative to mouse cursor
+        let targetX = e.clientX - popupWidth / 2;
+        targetX = Math.max(16, Math.min(window.innerWidth - popupWidth - 16, targetX));
+
+        // Always downwards from cursor: 22px below cursor
+        const targetY = e.clientY + 22;
+
+        return { x: targetX, y: targetY };
+    };
+
+    const showPopup = (e) => {
+        if (isVisible) return;
+        isVisible = true;
+
+        popup.classList.add('visible');
+        if (overlay) overlay.classList.add('visible');
+        document.body.classList.add('is-hovering-name');
+
+        const { x, y } = getDownwardCoords(e);
+        lastX = x;
+        lastY = y;
+
+        // Smooth overlay blur in
+        if (overlay) {
+            gsap.killTweensOf(overlay);
+            gsap.to(overlay, {
+                opacity: 1,
+                duration: 0.2,
+                ease: 'power2.out',
+                overwrite: 'auto'
+            });
+        }
+
+        // Elastic entrance bounce downwards
+        gsap.killTweensOf(popup);
+        gsap.fromTo(popup,
+            {
+                x: x,
+                y: y - 12,
+                scale: 0.72,
+                opacity: 0,
+                rotation: -3
+            },
+            {
+                x: x,
+                y: y,
+                scale: 1,
+                opacity: 1,
+                rotation: 0,
+                duration: 0.6,
+                ease: 'elastic.out(1.2, 0.45)',
+                overwrite: 'auto'
+            }
+        );
+    };
+
+    const movePopup = (e) => {
+        if (!isVisible) return;
+        const { x, y } = getDownwardCoords(e);
+
+        const deltaX = x - (lastX || x);
+        lastX = x;
+        lastY = y;
+
+        // Subtle elastic tilt in direction of horizontal motion
+        const tilt = Math.max(-6, Math.min(6, deltaX * 0.35));
+
+        gsap.to(popup, {
+            x: x,
+            y: y,
+            rotation: tilt,
+            duration: 0.55,
+            ease: 'elastic.out(1.15, 0.4)',
+            overwrite: 'auto',
+            onComplete: () => {
+                gsap.to(popup, { rotation: 0, duration: 0.25, ease: 'power2.out' });
+            }
+        });
+    };
+
+    const hidePopup = () => {
+        if (!isVisible) return;
+        isVisible = false;
+
+        // Fade overlay out immediately with fast, clean curve
+        if (overlay) {
+            gsap.killTweensOf(overlay);
+            gsap.to(overlay, {
+                opacity: 0,
+                duration: 0.1,
+                ease: 'power2.out',
+                overwrite: 'auto',
+                onComplete: () => {
+                    if (!isVisible) {
+                        overlay.classList.remove('visible');
+                        document.body.classList.remove('is-hovering-name');
+                    }
+                }
+            });
+        } else {
+            document.body.classList.remove('is-hovering-name');
+        }
+
+        // Dissolve popup immediately
+        gsap.killTweensOf(popup);
+        gsap.to(popup, {
+            scale: 0.88,
+            opacity: 0,
+            duration: 0.1,
+            ease: 'power2.out',
+            overwrite: 'auto',
+            onComplete: () => {
+                if (!isVisible) {
+                    popup.classList.remove('visible');
+                }
+            }
+        });
+    };
+
+    // Track mouse movement across the document/window
+    const onMouseMove = (e) => {
+        // Only run check if hero name is in or near viewport
+        const heroRect = heroName.getBoundingClientRect();
+        if (heroRect.bottom < 0 || heroRect.top > window.innerHeight) {
+            if (isVisible) hidePopup();
+            return;
+        }
+
+        const onName = isPointOnName(e.clientX, e.clientY);
+
+        if (onName) {
+            if (!isVisible) {
+                showPopup(e);
+            } else {
+                movePopup(e);
+            }
+        } else {
+            if (isVisible) {
+                hidePopup();
+            }
+        }
+    };
+
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+
+    // Immediate hide on scroll, keydown, or pointerdown outside
+    window.addEventListener('scroll', () => {
+        if (isVisible) hidePopup();
+    }, { passive: true });
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && isVisible) {
-            hidePopup(0);
+            hidePopup();
         }
     });
+
+    document.addEventListener('pointerdown', (e) => {
+        if (!isPointOnName(e.clientX, e.clientY)) {
+            hidePopup();
+        }
+    });
+
+    window.addEventListener('blur', () => {
+        hidePopup();
+    });
+
+    document.addEventListener('mouseleave', () => {
+        hidePopup();
+    });
 }
 
 
-// ═══════════════════════════════════════════
-//  SMOOTH SCROLL (Lenis)
-// ═══════════════════════════════════════════
-function initLenis() {
-    lenis = new Lenis({
-        duration: 0.8,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-        wheelMultiplier: 0.8,
-    });
 
-    lenis.on('scroll', ScrollTrigger.update);
-
-    gsap.ticker.add((time) => {
-        lenis.raf(time * 1000);
-    });
-
-    gsap.ticker.lagSmoothing(0);
-}
 
 // ═══════════════════════════════════════════
 //  SMOOTH ANCHOR SCROLLING
@@ -698,21 +694,4 @@ function initAnimations() {
     }
 }
 
-// ═══════════════════════════════════════════
-//  DOCUMIND VIDEO TOGGLE
-// ═══════════════════════════════════════════
-function initDocumindVideo() {
-    const video = document.getElementById('documind-video');
-    const playBtn = document.getElementById('documind-play-btn');
-    if (video && playBtn) {
-        playBtn.addEventListener('click', () => {
-            if (video.paused) {
-                video.play();
-                playBtn.innerText = 'Pause';
-            } else {
-                video.pause();
-                playBtn.innerText = 'Play';
-            }
-        });
-    }
-}
+

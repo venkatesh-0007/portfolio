@@ -13,3 +13,7 @@ Thumbs.db
 # Build/Dist (if any)
 dist/
 build/
+
+# Screen Recordings & Video Demos
+*.mov
+*.mp4
